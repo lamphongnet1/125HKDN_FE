@@ -9,7 +9,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="vi">
       <head>
-        <title>Duolingo - Học Ngôn Ngữ</title>
+        <title>Học Tiếng Nhật</title>
       </head>
       <body className="m-0 p-0">
         <div className="flex h-screen bg-gray-50">
