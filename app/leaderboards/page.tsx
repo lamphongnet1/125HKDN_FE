@@ -142,9 +142,8 @@ export default function Leaderboards() {
 
             <div className="container">
                 <div className="header">
-                    <h1>🏆 Giải đấu Ngọc lực báo</h1>
-                    <p>Top 7 sẽ được thăng hạng lên giải đấu cao hơn</p>
-                    <span className="time-badge">⏰ 20 tiếng</span>
+                    <h1>Top 10 người dùng xuất sắc nhất</h1>
+                    <p>Càng học tập nhiều, bạn càng đạt điểm cao</p>
                 </div>
 
                 <div className="leaderboard">
@@ -155,7 +154,7 @@ export default function Leaderboards() {
                             <div className="badge badge-1">🏅</div>
                         </div>
                         <div className="username">zett shu</div>
-                        <div className="score">888 KN</div>
+                        <div className="score">888 Điểm</div>
                     </div>
 
                     <div className="rank-item highlight">
@@ -165,7 +164,7 @@ export default function Leaderboards() {
                             <div className="badge badge-2">⭐</div>
                         </div>
                         <div className="username">Bạn</div>
-                        <div className="score">721 KN</div>
+                        <div className="score">721 Điểm</div>
                     </div>
 
                     <div className="rank-item">
@@ -175,7 +174,7 @@ export default function Leaderboards() {
                             <div className="badge badge-3">🔥</div>
                         </div>
                         <div className="username">parks</div>
-                        <div className="score">469 KN</div>
+                        <div className="score">469 Điểm</div>
                     </div>
 
                     <div className="rank-item">
@@ -185,7 +184,7 @@ export default function Leaderboards() {
                             <div className="badge badge-4">⚡</div>
                         </div>
                         <div className="username">Damion</div>
-                        <div className="score">339 KN</div>
+                        <div className="score">339 Điểm</div>
                     </div>
 
                     <div className="rank-item">
@@ -195,7 +194,7 @@ export default function Leaderboards() {
                             <div className="badge badge-5">💎</div>
                         </div>
                         <div className="username">Jesús Martínez</div>
-                        <div className="score">305 KN</div>
+                        <div className="score">305 Điểm</div>
                     </div>
 
                     <div className="rank-item">
@@ -205,7 +204,7 @@ export default function Leaderboards() {
                             <div className="badge badge-6">🇺🇸</div>
                         </div>
                         <div className="username">trevino</div>
-                        <div className="score">269 KN</div>
+                        <div className="score">269 Điểm</div>
                     </div>
 
                     <div className="rank-item">
@@ -215,7 +214,7 @@ export default function Leaderboards() {
                             <div className="badge badge-7">🌟</div>
                         </div>
                         <div className="username">Benedita Sousa</div>
-                        <div className="score">261 KN</div>
+                        <div className="score">261 Điểm</div>
                     </div>
                 </div>
             </div>
