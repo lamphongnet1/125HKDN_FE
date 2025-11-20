@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duolingo Việt Nam - Đăng nhập / Đăng ký</title>
+    <style>
+        /* Reset và font */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Hộp chính giữa màn hình */
+        .hộp_chính {
+            width: 420px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Nút đóng cửa sổ */
+        .nút_đóng {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        /* Tab Đăng nhập - Đăng ký */
+        .thanh_chuyển {
+            display: flex;
+            background: #f5f5f5;
+        }
+        .nút_tab {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .nút_tab.đang_chọn {
+            background: white;
+            border-bottom: 4px solid #58cc02;
+            color: #58cc02;
+        }
+
+        /* Tiêu đề */
+        .tiêu_đề {
+            text-align: center;
+            padding: 30px 40px 10px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Form chung */
+        .form {
+            padding: 0 40px 30px;
+        }
+        .nhóm_input {
+            margin-bottom: 16px;
+        }
+        .ô_nhập {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .ô_nhập:focus {
+            outline: none;
+            border-color: #58cc02;
+            box-shadow: 0 0 0 4px rgba(88,204,2,0.15);
+        }
+
+        /* Nút bấm */
+        .nút_xanh {
+            width: 100%;
+            padding: 15px;
+            background: #58cc02;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .nút_xanh:hover { background: #4ab302; }
+        .nút_xám {
+            background: #eee !important;
+            color: #777 !important;
+        }
+
+        /* Đường kẻ "HOẶC" */
+        .đường_kẻ {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+            color: #888;
+            font-size: 14px;
+        }
+        .đường_kẻ::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0; right: 0;
+            height: 1px;
+            background: #ddd;
+        }
+        .đường_kẻ span {
+            background: white;
+            padding: 0 20px;
+        }
+
+        /* Nút Google & Facebook */
+        .đăng_nhập_mạng_xã_hội {
+            display: flex;
+            gap: 12px;
+        }
+        .nút_mạng_xã_hội {
+            flex: 1;
+            padding: 13px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Chú thích chính sách */
+        .chú_thích {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            margin-top: 25px;
+            line-height: 1.6;
+        }
+        .chú_thích a {
+            color: #58cc02;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="hộp_chính">
+    <!-- Nút đóng -->
+    <div class="nút_đóng" onclick="window.close()">&times;</div>
+
+    <!-- Thanh chuyển tab -->
+    <div class="thanh_chuyển">
+        <button class="nút_tab đang_chọn" onclick="hiện_đăng_nhập()">ĐĂNG NHẬP</button>
+        <button class="nút_tab" onclick="hiện_đăng_ký()">ĐĂNG KÝ</button>
+    </div>
+
+    <!-- ================== FORM ĐĂNG NHẬP ================== -->
+    <div id="form_đăng_nhập" class="form">
+        <h1 class="tiêu_đề">Đăng nhập</h1>
+
+        <div class="nhóm_input">
+            <input type="text" class="ô_nhập" placeholder="Email hoặc tên đăng nhập">
+        </div>
+        <div class="nhóm_input">
+            <input type="password" class="ô_nhập" placeholder="Mật khẩu">
+            <a href="#" style="float:right; font-size:14px; color:#58cc02; margin-top:5px; display:block;">Quên?</a>
+        </div>
+
+        <button class="nút_xanh">ĐĂNG NHẬP</button>
+
+        <div class="đường_kẻ"><span>HOẶC</span></div>
+
+        <div class="đăng_nhập_mạng_xã_hội">
+            <div class="nút_mạng_xã_hội">
+                <img src="https://duolingo.com/images/google-logo.svg" width="20"> GOOGLE
+            </div>
+            <div class="nút_mạng_xã_hội">
+                <img src="https://duolingo.com/images/facebook-logo.svg" width="20"> FACEBOOK
+            </div>
+        </div>
+
+        <div class="chú_thích">
+            Khi đăng nhập trên Duolingo, bạn đã đồng ý với <a href="#">Các chính sách và Chính sách bảo mật</a> của chúng tôi.<br><br>
+            Trang này được reCAPTCHA Enterprise bảo vệ và tuân theo <a href="#">Chính sách bảo mật</a> và <a href="#">Điều khoản dịch vụ</a> của Google.
+        </div>
+    </div>
+
+    <!-- ================== FORM ĐĂNG KÝ ================== -->
+    <div id="form_đăng_ký" class="form" style="display:none;">
+        <h1 class="tiêu_đề">Bạn bao nhiêu tuổi?</h1>
+
+        <div class="nhóm_input">
+            <input type="number" class="ô_nhập" placeholder="Tuổi" min="13" id="tuổi_người_dùng">
+        </div>
+
+        <button class="nút_xanh nút_xám" onclick="bước_tiếp_theo()">TIẾP THEO</button>
+
+        <div class="đường_kẻ"><span>HOẶC</span></div>
+
+        <div class="đăng_nhập_mạng_xã_hội">
+            <div class="nút_mạng_xã_hội">
+                <img src="https://duolingo.com/images/google-logo.svg" width="20"> GOOGLE
+            </div>
+            <div class="nút_mạng_xã_hội">
+                <img src="https://duolingo.com/images/facebook-logo.svg" width="20"> FACEBOOK
+            </div>
+        </div>
+
+        <!-- Phần tạo tài khoản chi tiết (hiện sau khi bấm Tiếp theo) -->
+        <div id="phần_chi_tiết" style="display:none; margin-top:20px;">
+            <h1 class="tiêu_đề">Tạo hồ sơ</h1>
+
+            <div class="nhóm_input">
+                <input type="text" class="ô_nhập" placeholder="Tên (tùy chọn)">
+            </div>
+            <div class="nhóm_input">
+                <input type="email" class="ô_nhập" placeholder="Email">
+            </div>
+            <div class="nhóm_input">
+                <input type="password" class="ô_nhập" placeholder="Mật khẩu">
+            </div>
+
+            <button class="nút_xanh">TẠO TÀI KHOẢN</button>
+        </div>
+
+        <div class="chú_thích">
+            Khi đăng ký trên Duolingo, bạn đã đồng ý với <a href="#">Các chính sách và Chính sách bảo mật</a> của chúng tôi.<br><br>
+            Trang này được reCAPTCHA Enterprise bảo vệ và tuân theo <a href="#">Chính sách bảo mật</a> và <a href="#">Điều khoản dịch vụ</a> của Google.
+        </div>
+    </div>
+</div>
+
+<script>
+    // Chuyển tab
+    function hiện_đăng_nhập() {
+        document.querySelectorAll('.nút_tab').forEach(n => n.classList.remove('đang_chọn'));
+        document.querySelector('.thanh_chuyển button:nth-child(1)').classList.add('đang_chọn');
+        document.getElementById('form_đăng_nhập').style.display = 'block';
+        document.getElementById('form_đăng_ký').style.display = 'none';
+    }
+
+    function hiện_đăng_ký() {
+        document.querySelectorAll('.nút_tab').forEach(n => n.classList.remove('đang_chọn'));
+        document.querySelector('.thanh_chuyển button:nth-child(2)').classList.add('đang_chọn');
+        document.getElementById('form_đăng_nhập').style.display = 'none';
+        document.getElementById('form_đăng_ký').style.display = 'block';
+    }
+
+    // Bấm nút "Tiếp theo" ở phần tuổi
+    function bước_tiếp_theo() {
+        const tuổi = document.getElementById('tuổi_người_dùng').value;
+        if (tuổi >= 13) {
+            document.getElementById('phần_chi_tiết').style.display = 'block';
+            document.querySelector('#form_đăng_ký .nút_xám').style.display = 'none';
+        } else {
+            alert('Bạn phải từ 13 tuổi trở lên để đăng ký Duolingo!');
+        }
+    }
+</script>
+
+</body>
+</html>
