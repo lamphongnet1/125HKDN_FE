@@ -28,8 +28,11 @@ export const Sidebar: React.FC = () => {
   const pathname = usePathname();
 
   return (
-    <div className="w-72 bg-white p-6 shadow-lg">
-      <div className="text-blue-500 text-4xl font-bold mb-8">learnpaw</div>
+<div className="w-72 bg-white p-6 fixed left-0 top-0 h-screen border-r-2 border-[#e5e5e5]">
+
+    <div className="text-blue-500 text-4xl font-bold mb-8 text-center">
+    JapanPath 
+    </div>
 
       <div className="space-y-2">
         <NavItem

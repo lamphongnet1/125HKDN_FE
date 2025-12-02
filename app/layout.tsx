@@ -1,29 +1,18 @@
-'use client';
-
-import React from 'react';
 import './globals.css';
 import { Sidebar } from './components/Sidebar';
-import { Dog } from './components/Dog';
-
+import {RightSidebar} from './components/RightSidebar';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi">
-      <head>
-        <title>Học Tiếng Nhật</title>
-      </head>
-      <body className="m-0 p-0">
-        <div className="flex h-screen bg-gray-50">
-          
-          {/* Sidebar cố định */}
+      <body>
+        <div className="flex h-screen">
           <Sidebar />
-
-          {/* Main Content */}
-          <div className="flex-1 p-10 overflow-y-auto">
-            {children}
-          </div>
-
-          {/* Dog Mascot cố định */}
-          <Dog />
+          <div className="flex-1 flex justify-center ml-72 p-10">
+            <div className="w-[592px]">
+              {children}
+            </div>
+          </div> 
+          <RightSidebar />  
         </div>
       </body>
     </html>

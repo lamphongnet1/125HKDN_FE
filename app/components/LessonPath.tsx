@@ -1,59 +1,78 @@
 import React from 'react';
 import { LessonNode } from './LessonNode';
 
-interface LessonPathProps {
-  onLessonClick: () => void;
+export type NodeType = 'lesson' | 'chest' | 'trophy';
+export type NodeStatus = 'active' | 'locked';
+
+interface Node {
+  type: NodeType;
+  status: NodeStatus;
 }
 
-export const LessonPath: React.FC<LessonPathProps> = ({ onLessonClick }) => {
-  // Define positions for nodes to create snake-like path
-  const nodes = [
-    { type: 'lesson' as const, status: 'active' as const, x: 300, y: 80 },
-    { type: 'lesson' as const, status: 'locked' as const, x: 400, y: 200 },
-    { type: 'chest' as const, status: 'locked' as const, x: 200, y: 320 },
-    { type: 'lesson' as const, status: 'locked' as const, x: 300, y: 440 },
-    { type: 'trophy' as const, status: 'locked' as const, x: 400, y: 560 },
-  ];
+interface LessonPathProps {
+  nodes: Node[];
+  pathId: number; // path 1, 2, 3 ...
+  onLessonClick?: () => void;
+  label?: string;
+}
 
-  // Generate SVG path
-  const pathD = `
-    M 300 80
-    Q 350 140, 400 200
-    Q 400 260, 200 320
-    Q 200 380, 300 440
-    Q 350 500, 400 560
-  `;
+export const LessonPath: React.FC<LessonPathProps> = ({
+  nodes,
+  pathId,
+  onLessonClick,
+  label = 'Order drinks',
+}) => {
+  // map các pathId -> positions
+const pathPositions: Record<number, { x: number; y: number }[]> = {
+  1: [
+    { x: 300, y: 40 },
+    { x: 250, y: 135 },
+    { x: 200, y: 220 },
+    { x: 230, y: 310 },
+    { x: 280, y: 390 },
+  ],
+  2: [
+    { x: 340, y: 50 },
+    { x: 370, y: 135 },
+    { x: 400, y: 220 },
+    { x: 360, y: 310 },
+    { x: 330, y: 390 },
+  ],
+  3: [
+    { x: 280, y: 50 },
+    { x: 230, y: 135 },
+    { x: 200, y: 220 },
+    { x: 220, y: 310 },
+    { x: 270, y: 390 },
+  ],
+};
+
+  const positions = pathPositions[pathId] || pathPositions[1]; // fallback
 
   return (
-    <div className="relative w-full" style={{ height: '700px' }}>
-      {/* SVG curved path */}
-      <svg className="absolute top-0 left-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-        <defs>
-          <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#d1d5db" />
-            <stop offset="100%" stopColor="#d1d5db" />
-          </linearGradient>
-        </defs>
-        <path
-          d={pathD}
-          stroke="url(#pathGradient)"
-          strokeWidth="6"
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+    <>
+      <div className="relative w-full h-[450px]">
+        {nodes.map((node, index) => (
+          <LessonNode
+            key={index}
+            type={node.type}
+            status={node.status}
+            position={positions[index]}
+            onClick={index === 0 && onLessonClick ? onLessonClick : undefined}
+          />
+        ))}
+      </div>
 
-      {/* Lesson nodes */}
-      {nodes.map((node, index) => (
-        <LessonNode
-          key={index}
-          type={node.type}
-          status={node.status}
-          position={{ x: node.x, y: node.y }}
-          onClick={index === 0 ? onLessonClick : undefined}
-        />
-      ))}
-    </div>
+      <div className="relative my-7">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t-2 border-gray-300"></div>
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-white px-6 py-2 text-[15px] font-bold text-gray-400 tracking-wide">
+            {label}
+          </span>
+        </div>
+      </div>
+    </>
   );
 };

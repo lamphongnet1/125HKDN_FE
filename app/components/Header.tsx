@@ -9,7 +9,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ section, unit, title }) => {
   return (
-    <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-8 rounded-2xl mb-10 flex justify-between items-center shadow-xl">
+    <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-2xl mb-10 flex justify-between items-center">
       <div className="flex items-center gap-4">
         <button className="bg-white/20 hover:bg-white/30 w-10 h-10 rounded-lg flex items-center justify-center transition-all">
           ←

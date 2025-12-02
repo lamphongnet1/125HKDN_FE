@@ -14,6 +14,80 @@ export const LessonNode: React.FC<LessonNodeProps> = ({
   position,
   onClick
 }) => {
+  // Xác định màu sắc theo type
+  const getColors = () => {
+    switch (type) {
+      case 'chest':
+        return status === 'locked' 
+          ? {
+              gradient: 'from-gray-300 to-gray-400',
+              shadow: '0 8px 0 #6b7280, 0 10px 20px rgba(0,0,0,0.2)',
+              hoverShadow: '0 6px 0 #6b7280, 0 8px 16px rgba(0,0,0,0.2)',
+              activeShadow: '0 0px 0 #6b7280, 0 2px 8px rgba(0,0,0,0.2)'
+            }
+          : {
+              gradient: 'from-purple-400 to-purple-600',
+              shadow: '0 8px 0 #6b21a8, 0 10px 20px rgba(147, 51, 234, 0.4)',
+              hoverShadow: '0 6px 0 #6b21a8, 0 8px 16px rgba(147, 51, 234, 0.4)',
+              activeShadow: '0 0px 0 #6b21a8, 0 2px 8px rgba(147, 51, 234, 0.4)'
+            };
+      case 'trophy':
+        return status === 'locked'
+          ? {
+              gradient: 'from-gray-300 to-gray-400',
+              shadow: '0 8px 0 #6b7280, 0 10px 20px rgba(0,0,0,0.2)',
+              hoverShadow: '0 6px 0 #6b7280, 0 8px 16px rgba(0,0,0,0.2)',
+              activeShadow: '0 0px 0 #6b7280, 0 2px 8px rgba(0,0,0,0.2)'
+            }
+          : {
+              gradient: 'from-amber-400 to-amber-600',
+              shadow: '0 8px 0 #b45309, 0 10px 20px rgba(217, 119, 6, 0.4)',
+              hoverShadow: '0 6px 0 #b45309, 0 8px 16px rgba(217, 119, 6, 0.4)',
+              activeShadow: '0 0px 0 #b45309, 0 2px 8px rgba(217, 119, 6, 0.4)'
+            };
+      default: // lesson
+        if (status === 'locked') {
+          return {
+            gradient: 'from-gray-300 to-gray-400',
+            shadow: '0 8px 0 #6b7280, 0 10px 20px rgba(0,0,0,0.2)',
+            hoverShadow: '0 6px 0 #6b7280, 0 8px 16px rgba(0,0,0,0.2)',
+            activeShadow: '0 0px 0 #6b7280, 0 2px 8px rgba(0,0,0,0.2)'
+          };
+        }
+        if (status === 'completed') {
+          return {
+            gradient: 'from-yellow-300 to-yellow-500',
+            shadow: '0 8px 0 #b45309, 0 10px 20px rgba(217, 119, 6, 0.4)',
+            hoverShadow: '0 6px 0 #b45309, 0 8px 16px rgba(217, 119, 6, 0.4)',
+            activeShadow: '0 0px 0 #b45309, 0 2px 8px rgba(217, 119, 6, 0.4)'
+          };
+        }
+        return {
+          gradient: 'from-blue-400 to-blue-600',
+          shadow: '0 8px 0 #1e40af, 0 10px 20px rgba(37, 99, 235, 0.4)',
+          hoverShadow: '0 6px 0 #1e40af, 0 8px 16px rgba(37, 99, 235, 0.4)',
+          activeShadow: '0 0px 0 #1e40af, 0 2px 8px rgba(37, 99, 235, 0.4)'
+        };
+    }
+  };
+
+  // Xác định icon theo type
+  const getIcon = () => {
+    const iconColor = status === 'locked' ? 'text-gray-600' : 'text-white';
+    const iconFill = status === 'locked' ? 'fill-gray-600' : 'fill-white';
+
+    switch (type) {
+      case 'chest':
+        return <Package className={`w-10 h-10 ${iconColor} ${iconFill} drop-shadow-md`} strokeWidth={0} />;
+      case 'trophy':
+        return <Award className={`w-10 h-10 ${iconColor} ${iconFill} drop-shadow-md`} strokeWidth={0} />;
+      default:
+        return <Star className={`w-10 h-10 ${iconColor} ${iconFill} drop-shadow-md`} strokeWidth={0} />;
+    }
+  };
+
+  const colors = getColors();
+
   return (
     <div 
       className="absolute flex flex-col items-center"
@@ -23,73 +97,89 @@ export const LessonNode: React.FC<LessonNodeProps> = ({
         transform: 'translate(-50%, -50%)'
       }}
     >
-      {type === 'lesson' && (
-        <>
-          {/* Outer white border ring */}
-          <div className="relative">
-            <div className="absolute inset-0 bg-white rounded-full scale-110 shadow-xl z-0" />
-            
-            {/* Lesson Circle */}
-            <div 
-              className={`
-                relative z-10 w-24 h-24 rounded-full flex items-center justify-center transition-all
-                ${status === 'active' ? 'bg-gradient-to-b from-blue-400 to-blue-500 cursor-pointer hover:scale-105' : ''}
-                ${status === 'locked' ? 'bg-gradient-to-b from-gray-300 to-gray-400 cursor-not-allowed' : ''}
-                ${status === 'completed' ? 'bg-gradient-to-b from-purple-300 to-purple-400 cursor-pointer hover:scale-105' : ''}
-                shadow-lg
-              `}
-              onClick={status !== 'locked' ? onClick : undefined}
-              style={{
-                boxShadow: status === 'active' 
-                  ? '0 8px 0 #2563eb, 0 10px 20px rgba(0,0,0,0.2)' 
-                  : status === 'locked'
-                  ? '0 6px 0 #b0b0b0, 0 8px 15px rgba(0,0,0,0.15)'
-                  : '0 8px 0 #9333ea, 0 10px 20px rgba(0,0,0,0.2)'
-              }}
-            >
-              {status === 'locked' ? (
-                <Lock className="w-10 h-10 text-gray-600" />
-              ) : (
-                <Star className="w-11 h-11 text-white fill-white" />
-              )}
-            </div>
-          </div>
-          
-          {status === 'active' && (
-            <div className="mt-6 bg-white px-5 py-2 rounded-full font-bold text-blue-500 text-sm shadow-md border-2 border-gray-100">
-              START
-            </div>
-          )}
-        </>
-      )}
-
-      {type === 'chest' && (
-        <div className="relative">
-          <div className="absolute inset-0 bg-white rounded-2xl scale-105 shadow-xl z-0" />
+      <div className="relative" style={{ perspective: '1000px' }}>
+        {/* START Label - chỉ hiện cho lesson active */}
+        {type === 'lesson' && status === 'active' && (
           <div 
-            className="relative z-10 w-20 h-20 bg-gradient-to-b from-gray-400 to-gray-500 rounded-xl flex items-center justify-center"
+            className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white px-4 py-1.5 
+            rounded-[10px] font-bold text-blue-600 text-[15px] tracking-wide shadow-lg 
+            border border-gray-500 uppercase animate-bounce-custom z-20
+            before:content-[''] before:absolute before:left-1/2 before:-translate-x-1/2 
+            before:top-full before:w-0 before:h-0 
+            before:border-l-8 before:border-r-8 before:border-t-[10px]
+            before:border-l-transparent before:border-r-transparent before:border-t-white"
             style={{
-              boxShadow: '0 6px 0 #909090, 0 8px 15px rgba(0,0,0,0.2)'
+              fontFamily: 'system-ui, -apple-system, "Segoe UI", sans-serif',
+              fontWeight: 700,
+              letterSpacing: '1px'
             }}
           >
-            <Package className="w-9 h-9 text-white" />
+            START
           </div>
-        </div>
-      )}
+        )}
 
-      {type === 'trophy' && (
-        <div className="relative">
-          <div className="absolute inset-0 bg-white rounded-full scale-110 shadow-xl z-0" />
-          <div 
-            className="relative z-10 w-24 h-24 bg-gradient-to-b from-gray-300 to-gray-400 rounded-full flex items-center justify-center"
-            style={{
-              boxShadow: '0 6px 0 #b0b0b0, 0 8px 15px rgba(0,0,0,0.15)'
+        {/* Outer Ring - chỉ hiện cho lesson active */}
+        {type === 'lesson' && status === 'active' && (
+          <svg 
+            viewBox="0 0 100 100" 
+            className="absolute mt-0.5 w-28 h-28 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 transition-transform duration-100"
+            style={{ 
+              filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))',
+              transform: 'rotateX(35deg) translateZ(0)'
             }}
           >
-            <Award className="w-11 h-11 text-gray-600" />
-          </div>
-        </div>
-      )}
+            <defs>
+              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#e5e7eb" />
+                <stop offset="100%" stopColor="#d1d5db" />
+              </linearGradient>
+            </defs>
+            <ellipse
+              cx="50"
+              cy="52"
+              rx="45"
+              ry="45"
+              fill="none"
+              stroke="url(#ringGradient)"
+              strokeWidth="8"
+            />
+          </svg>
+        )}
+
+        {/* Main Button - áp dụng cho tất cả types */}
+        <button 
+  className={`
+    relative z-10 w-[72px] h-[72px] rounded-full flex items-center justify-center
+    transition-all duration-100 ease-out group
+    bg-gradient-to-b ${colors.gradient}
+    cursor-pointer
+  `}
+  onClick={onClick}
+  style={{
+    transform: 'perspective(600px) rotateX(35deg) translateY(0px)',
+    boxShadow: colors.shadow,
+    transformStyle: 'preserve-3d'
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.transform = 'perspective(600px) rotateX(35deg) translateY(2px)';
+    e.currentTarget.style.boxShadow = colors.hoverShadow;
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.transform = 'perspective(600px) rotateX(35deg) translateY(0px)';
+    e.currentTarget.style.boxShadow = colors.shadow;
+  }}
+  onMouseDown={(e) => {
+    e.currentTarget.style.transform = 'perspective(600px) rotateX(35deg) translateY(8px)';
+    e.currentTarget.style.boxShadow = colors.activeShadow;
+  }}
+  onMouseUp={(e) => {
+    e.currentTarget.style.transform = 'perspective(600px) rotateX(35deg) translateY(2px)';
+    e.currentTarget.style.boxShadow = colors.hoverShadow;
+  }}
+>
+  {getIcon()}
+        </button>
+      </div>
     </div>
   );
 };

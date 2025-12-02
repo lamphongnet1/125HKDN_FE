@@ -24,3 +24,17 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* Hiệu ứng Bounce */
+@keyframes bounce-custom {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Utility class để dùng trong JSX */
+.animate-bounce-custom {
+  animation: bounce-custom 0.8s infinite ease-in-out;
+}
