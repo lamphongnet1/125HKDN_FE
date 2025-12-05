@@ -1,157 +1,167 @@
 import React from 'react';
-import { Flame, Trophy, Target, Calendar, TrendingUp, Award, Star, Book, Clock } from 'lucide-react';
+import { Target, Trophy, Award, Book, TrendingUp } from 'lucide-react';
 
 export const RightSidebar = () => {
   return (
-    <div className="w-130  h-max sticky top-0 bg-white border-l border-gray-200 p-6">
-      {/* User Stats Quick View */}
-      <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-5 text-white mb-6 shadow-lg">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-            👤
+    <div className="w-120 h-screen mt-10">
+      
+      {/* User Profile Card */}
+      <div className="bg-white rounded-lg p-4 mb-4 border-2 border-[#e5e5e5]">
+        <div className="flex items-center gap-3 pb-3 border-b border-gray-200">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+            NA
           </div>
-          <div>
-            <div className="font-bold text-lg">Nguyễn Văn A</div>
-            <div className="text-sm opacity-90">Online</div>
+          <div className="flex-1">
+            <div className="font-semibold text-gray-800">Nguyễn Văn A</div>
+            <div className="text-xs text-gray-500">nguyenvana@email.com</div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-white/20 rounded-xl p-3">
-            <div className="text-2xl font-bold">450</div>
-            <div className="text-xs opacity-90">Điểm</div>
-          </div>
-          <div className="bg-white/20 rounded-xl p-3">
-            <div className="text-2xl font-bold">7</div>
-            <div className="text-xs opacity-90">Days Streak</div>
+        <div className="pt-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">Tổng điểm</span>
+            <span className="text-2xl font-bold text-blue-600">450</span>
           </div>
         </div>
       </div>
 
-      {/* Learning Progress Today */}
-      <div className="bg-white rounded-2xl p-5 mb-6 border border-gray-200 shadow-sm">
-        <div className="flex items-center justify-between mb-3">
+      {/* Today Progress */}
+      <div className="bg-white rounded-lg p-4 mb-4 border-2 border-[#e5e5e5]">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+            <Target className="w-5 h-5 text-green-600" />
+          </div>
+          <h3 className="font-semibold text-gray-800">Tiến độ hôm nay</h3>
+        </div>
+        
+        <div className="mb-3">
+          <div className="flex justify-between text-sm mb-1">
+            <span className="text-gray-600">3/5 bài học</span>
+            <span className="text-gray-800 font-medium">60%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="bg-green-500 h-2 rounded-full transition-all" style={{ width: '60%' }}></div>
+          </div>
+        </div>
+
+        <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-green-500" />
-            <span className="font-bold text-gray-800">Hôm nay</span>
+            <span className="text-green-500">✓</span>
+            <span className="text-gray-700">Hiragana cơ bản</span>
           </div>
-          <span className="text-sm text-gray-500">3/5 bài</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-3 mb-3">
-          <div 
-            className="bg-gradient-to-r from-green-400 to-green-500 h-3 rounded-full transition-all"
-            style={{ width: '60%' }}
-          />
-        </div>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">✅ Bài 1: Hiragana cơ bản</span>
-            <span className="text-green-600 font-semibold">100%</span>
+          <div className="flex items-center gap-2">
+            <span className="text-green-500">✓</span>
+            <span className="text-gray-700">Chào hỏi</span>
           </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">✅ Bài 2: Chào hỏi</span>
-            <span className="text-green-600 font-semibold">100%</span>
-          </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">📝 Bài 3: Đặt món ăn</span>
-            <span className="text-blue-600 font-semibold">75%</span>
+          <div className="flex items-center gap-2">
+            <span className="text-blue-500">→</span>
+            <span className="text-gray-700 font-medium">Đặt món ăn (75%)</span>
           </div>
         </div>
       </div>
 
-      {/* Recent Quiz Results */}
-      <div className="bg-white rounded-2xl p-5 mb-6 border border-gray-200 shadow-sm">
-        <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-yellow-500" />
-          Kết quả gần đây
-        </h3>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <span className="text-xl">✓</span>
+      {/* Quiz Results */}
+      <div className="bg-white rounded-lg p-4 mb-4 border-2 border-[#e5e5e5]">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+            <Trophy className="w-5 h-5 text-yellow-600" />
+          </div>
+          <h3 className="font-semibold text-gray-800">Kết quả trắc nghiệm</h3>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between p-2 rounded-lg bg-gray-50 border border-gray-200">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center text-green-600 font-bold">
+                ✓
               </div>
               <div>
-                <div className="text-sm font-semibold text-gray-800">Trắc nghiệm 1</div>
-                <div className="text-xs text-gray-500">Hiragana A-Z</div>
+                <div className="text-sm font-medium text-gray-800">Hiragana A-Z</div>
+                <div className="text-xs text-gray-500">Trắc nghiệm 1</div>
               </div>
             </div>
             <div className="text-right">
-              <div className="font-bold text-green-600">9/10</div>
+              <div className="text-sm font-bold text-green-600">9/10</div>
               <div className="text-xs text-gray-500">90%</div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-xl">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <span className="text-xl">~</span>
+          <div className="flex items-center justify-between p-2 rounded-lg bg-gray-50 border border-gray-200">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-yellow-100 rounded flex items-center justify-center text-yellow-600 font-bold">
+                ~
               </div>
               <div>
-                <div className="text-sm font-semibold text-gray-800">Trắc nghiệm 2</div>
-                <div className="text-xs text-gray-500">Chào hỏi cơ bản</div>
+                <div className="text-sm font-medium text-gray-800">Chào hỏi cơ bản</div>
+                <div className="text-xs text-gray-500">Trắc nghiệm 2</div>
               </div>
             </div>
             <div className="text-right">
-              <div className="font-bold text-yellow-600">7/10</div>
+              <div className="text-sm font-bold text-yellow-600">7/10</div>
               <div className="text-xs text-gray-500">70%</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Question Types Practice */}
-      <div className="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl p-5 mb-6 text-white shadow-lg">
+      {/* Practice Types */}
+      <div className="bg-white rounded-lg p-4 mb-4 border-2 border-[#e5e5e5]">
         <div className="flex items-center gap-2 mb-3">
-          <Award className="w-6 h-6" />
-          <h3 className="font-bold">Luyện tập hôm nay</h3>
+          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+            <Award className="w-5 h-5 text-purple-600" />
+          </div>
+          <h3 className="font-semibold text-gray-800">Loại câu hỏi</h3>
         </div>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="opacity-90">🎯 Điền từ</span>
-            <span className="font-semibold">5 câu</span>
+
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div className="p-2 rounded border border-gray-200 text-center">
+            <div className="font-bold text-gray-800">5</div>
+            <div className="text-xs text-gray-600">Điền từ</div>
           </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="opacity-90">👂 Nghe xếp câu</span>
-            <span className="font-semibold">3 câu</span>
+          <div className="p-2 rounded border border-gray-200 text-center">
+            <div className="font-bold text-gray-800">3</div>
+            <div className="text-xs text-gray-600">Nghe xếp câu</div>
           </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="opacity-90">🎤 Nghe hội thoại</span>
-            <span className="font-semibold">2 câu</span>
+          <div className="p-2 rounded border border-gray-200 text-center">
+            <div className="font-bold text-gray-800">2</div>
+            <div className="text-xs text-gray-600">Nghe hội thoại</div>
           </div>
-          <div className="flex items-center justify-between text-sm">
-            <span className="opacity-90">🖼️ Chọn ảnh</span>
-            <span className="font-semibold">4 câu</span>
+          <div className="p-2 rounded border border-gray-200 text-center">
+            <div className="font-bold text-gray-800">4</div>
+            <div className="text-xs text-gray-600">Chọn ảnh</div>
           </div>
         </div>
       </div>
 
-      {/* Current Chapter Progress */}
-      <div className="bg-white rounded-2xl p-5 border border-gray-200 shadow-sm">
+      {/* Current Chapter */}
+      <div className="bg-white rounded-lg p-4 border-2 border-[#e5e5e5]">
         <div className="flex items-center gap-2 mb-3">
-          <Book className="w-5 h-5 text-indigo-500" />
-          <h3 className="font-bold text-gray-800">Chương hiện tại</h3>
+          <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+            <Book className="w-5 h-5 text-indigo-600" />
+          </div>
+          <h3 className="font-semibold text-gray-800">Chương hiện tại</h3>
         </div>
-        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-4 mb-3">
+
+        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-3 mb-3 border border-indigo-100">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <div className="text-sm text-gray-600">Chương 1</div>
-              <div className="font-bold text-gray-800">Giao tiếp cơ bản</div>
+              <div className="text-xs text-gray-600">Chương 1</div>
+              <div className="font-semibold text-gray-800">Giao tiếp cơ bản</div>
             </div>
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-              <span className="text-2xl">🍱</span>
-            </div>
+            <div className="text-2xl">🍱</div>
           </div>
-          <div className="w-full bg-white rounded-full h-2 mb-2">
-            <div className="bg-indigo-500 h-2 rounded-full" style={{ width: '65%' }} />
+          <div className="w-full bg-white rounded-full h-1.5 mb-1">
+            <div className="bg-indigo-500 h-1.5 rounded-full" style={{ width: '65%' }}></div>
           </div>
           <div className="text-xs text-gray-600">13/20 bài học</div>
         </div>
-        <button className="w-full py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors">
+
+        <button className="w-full py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
           Tiếp tục học
         </button>
       </div>
-      {/* Footer Links */}
-      <div className="pt-4 border-t border-gray-200">
+
+      {/* Footer */}
+      <div className="pt-4 border-[#e5e5e5]">
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mb-3">
           <a href="#" className="text-xs text-gray-500 hover:text-gray-700 transition-colors">ABOUT</a>
           <a href="#" className="text-xs text-gray-500 hover:text-gray-700 transition-colors">BLOG</a>
