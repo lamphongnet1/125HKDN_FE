@@ -1,77 +1,74 @@
-"use client"
+"use client";
+import { useState } from 'react';
+import Hiragana from './components/hiragana/hiragana';
+import Katakana from './components/katakana/katakana';
+import Kanji from './components/kanji/kanji';
 import './page.css';
+
+type Tab = 'HIRAGANA' | 'KATAKANA' | 'KANJI';
+
 export default function Letters() {
+    const [activeTab, setActiveTab] = useState<Tab>('HIRAGANA');
+
+    const handleTabClick = (tab: Tab) => {
+        setActiveTab(tab);
+    };
+
+    const renderContent = () => {
+        switch (activeTab) {
+            case 'HIRAGANA':
+                return (
+                    <div>
+                        <p className="tab-content-title">Đây là nội dung bảng chữ Hiragana</p>
+                        <Hiragana/>
+                    </div>
+                );
+            case 'KATAKANA':
+                return (
+                    <div>
+                        <p className="tab-content-title">Đây là nội dung bảng chữ Katakana</p>
+                        <Katakana/>
+                    </div>
+                );
+            case 'KANJI':
+                return (
+                    <div>
+                        <p className="tab-content-title">Đây là nội dung chữ Kanji</p>
+                        <Kanji/>
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
     return (
-        <div className="hiragana-keyboard">
-            <div className="row">
-                <div className="char-box">
-                    <span className="hiragana">あ</span>
-                    <span className="romaji">a</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">い</span>
-                    <span className="romaji">i</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">う</span>
-                    <span className="romaji">u</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">え</span>
-                    <span className="romaji">e</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">お</span>
-                    <span className="romaji">o</span>
-                </div>
+        <div className="letters-page">
+            <div className="tab-navigation">
+                {['HIRAGANA', 'KATAKANA', 'KANJI'].map((tabName) => (
+                    <div
+                        key={tabName}
+                        className={`tab-item ${activeTab === tabName ? 'active' : ''}`}
+                        onClick={() => handleTabClick(tabName as Tab)}
+                    >
+                        {tabName}
+                    </div>
+                ))}
             </div>
 
-            <div className="row">
-                <div className="char-box">
-                    <span className="hiragana">か</span>
-                    <span className="romaji">ka</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">き</span>
-                    <span className="romaji">ki</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">く</span>
-                    <span className="romaji">ku</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">け</span>
-                    <span className="romaji">ke</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">こ</span>
-                    <span className="romaji">ko</span>
-                </div>
+            <div className="progress-bar-container">
+                <div
+                    className="progress-indicator"
+                    style={{
+                        width: `${100 / 3}%`,
+                        transform: `translateX(${['HIRAGANA', 'KATAKANA', 'KANJI'].indexOf(activeTab) * (300 / 3)}%)`
+                    }}
+                ></div>
             </div>
 
-            <div className="row">
-                <div className="char-box">
-                    <span className="hiragana">さ</span>
-                    <span className="romaji">sa</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">し</span>
-                    <span className="romaji">shi</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">す</span>
-                    <span className="romaji">su</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">せ</span>
-                    <span className="romaji">se</span>
-                </div>
-                <div className="char-box">
-                    <span className="hiragana">そ</span>
-                    <span className="romaji">so</span>
-                </div>
+            <div className="tab-content-wrapper">
+                {renderContent()}
             </div>
-
         </div>
-    )
+    );
 }

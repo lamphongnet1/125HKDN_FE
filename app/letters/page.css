@@ -1,63 +1,61 @@
-/* Thiết lập font và màu nền chung */
-body {
-    background-color: #f7f7f7;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
+/* Container chính */
+.letters-page {
     padding: 20px;
+    max-width: 900px; /* Giới hạn chiều rộng cho đẹp */
+    margin: 0 auto;
 }
 
-/* Container chính của bảng chữ cái */
-.hiragana-keyboard {
-    width: 600px; /* Giới hạn chiều rộng cho dễ nhìn */
-}
-
-/* Định dạng cho mỗi hàng */
-.row {
+/* --- THANH ĐIỀU HƯỚNG TAB --- */
+.tab-navigation {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid #ddd; /* Đường kẻ mờ phía dưới */
+    margin-bottom: 0;
 }
 
-/* Định dạng cho mỗi ô chữ cái */
-.char-box {
-    width: 18%; /* Giúp 5 ô vừa vặn trên 1 hàng (18%*5 + margin) */
-    padding: 15px 5px;
-    background-color: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column; /* Xếp Hiragana và Romaji theo cột */
-    align-items: center; /* Canh giữa nội dung */
+.tab-item {
+    width: 170px;
+    text-align: center;
+    padding: 15px 0;
     cursor: pointer;
-    transition: background-color 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+    color: #999; /* Màu xám cho tab không active */
+    transition: color 0.3s;
 }
 
-.char-box:hover {
-    background-color: #f0f0f0;
+.tab-item.active {
+    color: #333; /* Màu đậm hơn cho tab active */
+    font-weight: 600;
 }
 
-/* Chữ Hiragana (to hơn) */
-.hiragana {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px; /* Khoảng cách với Romaji */
+/* --- THANH TIẾN ĐỘ XANH --- */
+.progress-bar-container {
+    height: 3px;
+    width: 100%;
+    background-color: #ddd; /* Màu nền xám của thanh bar */
+    position: relative;
+    margin-top: -1px; /* Đè lên đường kẻ mờ để nối liền */
 }
 
-/* Chữ Romaji (nhỏ hơn, màu nhạt) */
-.romaji {
-    font-size: 12px;
-    color: #999;
-    text-decoration: underline; /* Tạo gạch dưới như trong ảnh */
-    text-underline-offset: 4px; /* Điều chỉnh vị trí gạch dưới */
-    line-height: 1;
+.progress-indicator {
+    height: 100%;
+    background-color: #007bff; /* Màu xanh nổi bật */
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s ease-in-out; /* Tạo hiệu ứng trượt */
 }
 
-/* Tùy chỉnh thêm để giống ảnh: bo góc và độ sâu chữ */
-.char-box {
-    /* Đảm bảo chiều cao ô tương đối bằng nhau */
-    height: 70px; 
-    justify-content: center;
+/* --- NỘI DUNG --- */
+.tab-content-wrapper {
+    padding: 20px 0;
+    min-height: 400px; /* Chiều cao tối thiểu để dễ nhìn */
+}
+
+.tab-content-title {
+    text-align: center;
+    color: #666;
+    font-style: italic;
 }
