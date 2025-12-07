@@ -19,21 +19,18 @@ export default function Letters() {
             case 'HIRAGANA':
                 return (
                     <div>
-                        <p className="tab-content-title">Đây là nội dung bảng chữ Hiragana</p>
                         <Hiragana/>
                     </div>
                 );
             case 'KATAKANA':
                 return (
                     <div>
-                        <p className="tab-content-title">Đây là nội dung bảng chữ Katakana</p>
                         <Katakana/>
                     </div>
                 );
             case 'KANJI':
                 return (
                     <div>
-                        <p className="tab-content-title">Đây là nội dung chữ Kanji</p>
                         <Kanji/>
                     </div>
                 );
