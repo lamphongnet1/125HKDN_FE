@@ -19,6 +19,12 @@
       'blue-400': '#1e3a8a',
       'green-400': '#166534',
       'purple-400': '#6b21a8',
+      'pink-400': '#be185d',      // Thêm pink
+      'red-400': '#991b1b',        // Thêm red
+      'orange-400': '#c2410c',     // Thêm orange
+      'yellow-400': '#a16207',     // Thêm yellow
+      'cyan-400': '#155e75',       // Thêm cyan
+      'teal-400': '#115e59',
     };
     return colorMap[color] || '#1e3a8a';
   };
@@ -75,64 +81,70 @@ useEffect(() => {
   };
 }, [showModal]);
 
-    const getColors = () => {
-      const hexColor = colorToHex(color);
-      const rgbColor = colorToRgb(color);
+const getColors = () => {
+  const hexColor = colorToHex(color);
+  const rgbColor = colorToRgb(color);
 
-      switch (type) {
-        case 'chest':
-          return status === 'locked' 
-            ? {
-                gradient: 'from-gray-300 to-gray-400',
-                shadow: '0 8px 0 #6b7280, 0 10px 20px rgba(0,0,0,0.2)',
-                hoverShadow: '0 6px 0 #6b7280, 0 8px 16px rgba(0,0,0,0.2)',
-                activeShadow: '0 0px 0 #6b7280, 0 2px 8px rgba(0,0,0,0.2)'
-              }
-            : {
-                gradient: 'from-purple-400 to-purple-600',
-                shadow: '0 8px 0 #6b21a8, 0 10px 20px rgba(147, 51, 234, 0.4)',
-                hoverShadow: '0 6px 0 #6b21a8, 0 8px 16px rgba(147, 51, 234, 0.4)',
-                activeShadow: '0 0px 0 #6b21a8, 0 2px 8px rgba(147, 51, 234, 0.4)'
-              };
-        case 'trophy':
-          return status === 'locked'
-            ? {
-                gradient: 'from-gray-300 to-gray-400',
-                shadow: '0 8px 0 #6b7280, 0 10px 20px rgba(0,0,0,0.2)',
-                hoverShadow: '0 6px 0 #6b7280, 0 8px 16px rgba(0,0,0,0.2)',
-                activeShadow: '0 0px 0 #6b7280, 0 2px 8px rgba(0,0,0,0.2)'
-              }
-            : {
-                gradient: 'from-amber-400 to-amber-600',
-                shadow: '0 8px 0 #b45309, 0 10px 20px rgba(217, 119, 6, 0.4)',
-                hoverShadow: '0 6px 0 #b45309, 0 8px 16px rgba(217, 119, 6, 0.4)',
-                activeShadow: '0 0px 0 #b45309, 0 2px 8px rgba(217, 119, 6, 0.4)'
-              };
-        default:
-          if (status === 'locked') {
-            return {
-              gradient: 'from-gray-300 to-gray-400',
-              shadow: '0 8px 0 #6b7280, 0 10px 20px rgba(0,0,0,0.2)',
-              hoverShadow: '0 6px 0 #6b7280, 0 8px 16px rgba(0,0,0,0.2)',
-              activeShadow: '0 0px 0 #6b7280, 0 2px 8px rgba(0,0,0,0.2)'
-            };
+  // Gradient map cho từng màu
+  const gradientMap: Record<string, string> = {
+    'blue-400': 'from-blue-400 to-blue-600',
+    'green-400': 'from-green-400 to-green-600',
+    'purple-400': 'from-purple-400 to-purple-600',
+    'pink-400': 'from-pink-400 to-pink-600',
+    'red-400': 'from-red-400 to-red-600',
+    'orange-400': 'from-orange-400 to-orange-600',
+    'yellow-400': 'from-yellow-400 to-yellow-600',
+    'cyan-400': 'from-cyan-400 to-cyan-600',
+    'teal-400': 'from-teal-400 to-teal-600',
+  };
+
+  switch (type) {
+    case 'chest':
+      return status === 'locked' 
+        ? {
+            gradient: 'from-gray-300 to-gray-400',
+            shadow: '0 8px 0 #6b7280, 0 10px 20px rgba(0,0,0,0.2)',
+            hoverShadow: '0 6px 0 #6b7280, 0 8px 16px rgba(0,0,0,0.2)',
+            activeShadow: '0 0px 0 #6b7280, 0 2px 8px rgba(0,0,0,0.2)'
           }
-          if (status === 'completed') {
-            return {
-              gradient: `from-${color} to-${color.replace('400','600')}`,
-              shadow: `0 8px 0 ${hexColor}, 0 10px 20px rgba(${rgbColor}, 0.4)`,
-              hoverShadow: `0 6px 0 ${hexColor}, 0 8px 16px rgba(${rgbColor}, 0.4)`,
-              activeShadow: `0 0px 0 ${hexColor}, 0 2px 8px rgba(${rgbColor}, 0.4)`
-            };
-          }
-          return {
-            gradient: `from-${color} to-${color.replace('400','600')}`,
-            shadow: `0 8px 0 ${hexColor}, 0 10px 20px rgba(${rgbColor}, 0.4)`,
-            hoverShadow: `0 6px 0 ${hexColor}, 0 8px 16px rgba(${rgbColor}, 0.4)`,
-            activeShadow: `0 0px 0 ${hexColor}, 0 2px 8px rgba(${rgbColor}, 0.4)`
+        : {
+            gradient: 'from-purple-400 to-purple-600',
+            shadow: '0 8px 0 #6b21a8, 0 10px 20px rgba(147, 51, 234, 0.4)',
+            hoverShadow: '0 6px 0 #6b21a8, 0 8px 16px rgba(147, 51, 234, 0.4)',
+            activeShadow: '0 0px 0 #6b21a8, 0 2px 8px rgba(147, 51, 234, 0.4)'
           };
+    case 'trophy':
+      return status === 'locked'
+        ? {
+            gradient: 'from-gray-300 to-gray-400',
+            shadow: '0 8px 0 #6b7280, 0 10px 20px rgba(0,0,0,0.2)',
+            hoverShadow: '0 6px 0 #6b7280, 0 8px 16px rgba(0,0,0,0.2)',
+            activeShadow: '0 0px 0 #6b7280, 0 2px 8px rgba(0,0,0,0.2)'
+          }
+        : {
+            gradient: 'from-amber-400 to-amber-600',
+            shadow: '0 8px 0 #b45309, 0 10px 20px rgba(217, 119, 6, 0.4)',
+            hoverShadow: '0 6px 0 #b45309, 0 8px 16px rgba(217, 119, 6, 0.4)',
+            activeShadow: '0 0px 0 #b45309, 0 2px 8px rgba(217, 119, 6, 0.4)'
+          };
+    default:
+      if (status === 'locked') {
+        return {
+          gradient: 'from-gray-300 to-gray-400',
+          shadow: '0 8px 0 #6b7280, 0 10px 20px rgba(0,0,0,0.2)',
+          hoverShadow: '0 6px 0 #6b7280, 0 8px 16px rgba(0,0,0,0.2)',
+          activeShadow: '0 0px 0 #6b7280, 0 2px 8px rgba(0,0,0,0.2)'
+        };
       }
-    };
+      // Sử dụng gradientMap thay vì template string
+      return {
+        gradient: gradientMap[color] || 'from-blue-400 to-blue-600',
+        shadow: `0 8px 0 ${hexColor}, 0 10px 20px rgba(${rgbColor}, 0.4)`,
+        hoverShadow: `0 6px 0 ${hexColor}, 0 8px 16px rgba(${rgbColor}, 0.4)`,
+        activeShadow: `0 0px 0 ${hexColor}, 0 2px 8px rgba(${rgbColor}, 0.4)`
+      };
+  }
+};
 
     const getIcon = () => {
       const iconColor = status === 'locked' ? 'text-gray-600' : 'text-white';

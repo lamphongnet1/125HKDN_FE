@@ -13,7 +13,7 @@ export default function Page() {
     title: 'Order food 2',
     color: 'blue-400'
   });
-  const colors = ['blue-400', 'green-400', 'purple-400'];
+  const colors = ['blue-400', 'purple-400', 'yellow-400'];
 
   const handleLessonPathInView = (label: string, pathId: number, color: string) => {
     setHeaderData({
