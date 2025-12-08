@@ -43,6 +43,7 @@
 
 .leaderboard {
     padding: 20px;
+    z-index: 10;
 }
 
 .rank-item {
@@ -73,7 +74,6 @@
 }
 
 .avatar-container {
-    position: relative;
     margin: 0 15px;
 }
 
