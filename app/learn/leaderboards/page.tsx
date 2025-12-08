@@ -61,16 +61,6 @@ export default function Leaderboard() {
       `}</style>
 
       <div className="mx-auto">
-        {/* League Badges */}
-        <div className="flex justify-center gap-3 mb-8">
-          {leagues.map((league, idx) => (
-            <div key={idx} className={`w-60 h-20 ${league.color} rounded-2xl flex items-center justify-center text-3xl shadow-lg transform hover:scale-105 transition-transform`}>
-                
-              {league.gem}
-            </div>
-          ))}
-        </div>
-
         {/* Main Card */}
         <div className="bg-white rounded-3xl overflow-hidden">
           {/* Header */}

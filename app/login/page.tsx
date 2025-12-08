@@ -182,6 +182,15 @@ export default function Auth() {
           </div>
         )}
       </div>
+      
+      {/* CSS GLOBAL: Cần thiết để body có đủ chiều cao cho việc căn giữa */}
+      <style jsx global>{`
+        html, body {
+          margin: 0;
+          padding: 0;
+          height: 100%; 
+        }
+      `}</style>
 
       <style jsx>{`
         * {
@@ -193,9 +202,9 @@ export default function Auth() {
           font-family: "Inter", Arial, sans-serif;
           background: #fff;
           display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 100vh;
+          justify-content: center; /* Căn giữa theo chiều ngang */
+          align-items: center; /* Căn giữa theo chiều dọc */
+          min-height: 100vh; /* Đảm bảo body có đủ chiều cao của viewport */
         }
 
         .hộp_chính {
@@ -229,6 +238,10 @@ export default function Auth() {
           font-size: 16px;
           font-weight: 600;
           cursor: pointer;
+          transition: background 0.2s, color 0.2s; /* Thêm transition */
+        }
+        .nút_tab:hover:not(.đang_chọn) {
+            background: #e8e8e8; /* Hiệu ứng hover cho tab không được chọn */
         }
         .nút_tab.đang_chọn {
           background: white;
@@ -274,6 +287,7 @@ export default function Auth() {
           font-weight: 600;
           cursor: pointer;
           margin-top: 10px;
+          transition: background 0.1s;
         }
         .nút_xanh:hover {
           background: #4ab302;
@@ -281,6 +295,7 @@ export default function Auth() {
         .nút_xám {
           background: #eee !important;
           color: #777 !important;
+          pointer-events: none; /* Khóa nút khi nó màu xám */
         }
 
         .đường_kẻ {
@@ -302,6 +317,7 @@ export default function Auth() {
         .đường_kẻ span {
           background: white;
           padding: 0 20px;
+          position: relative; /* Cần thiết để span nằm trên đường kẻ */
         }
 
         .đăng_nhập_mạng_xã_hội {
@@ -320,6 +336,11 @@ export default function Auth() {
           align-items: center;
           justify-content: center;
           gap: 10px;
+          transition: background 0.1s, border-color 0.1s;
+        }
+        .nút_mạng_xã_hội:hover {
+            background: #f8f8f8;
+            border-color: #c9c9c9;
         }
 
         .chú_thích {
@@ -332,6 +353,9 @@ export default function Auth() {
         .chú_thích a {
           color: #58cc02;
           text-decoration: none;
+        }
+        .chú_thích a:hover {
+            text-decoration: underline;
         }
       `}</style>
     </>

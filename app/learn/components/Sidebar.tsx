@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname,useRouter } from "next/navigation";
 import { Icon } from '@iconify/react';
 import Image from "next/image";
 
@@ -16,7 +16,7 @@ interface NavItemProps {
 
 const NavItem: React.FC<NavItemProps> = ({ icon, label, href, active, showPopup = false }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const router =  useRouter()
   const handleClick = (e: React.MouseEvent) => {
     if (showPopup) {
       e.preventDefault();
@@ -55,7 +55,7 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, href, active, showPopup 
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                   </svg>
                 </div>
-                <span className="font-bold text-gray-700 text-sm tracking-wide">DUOLINGO ENGLISH TEST</span>
+                <span className="font-bold text-gray-700 text-sm tracking-wide">JapanPath TEST</span>
               </button>
               
               <button className="w-full text-left px-4 py-3.5 hover:bg-gray-50 rounded-xl flex items-center gap-3 transition-colors">
@@ -81,7 +81,9 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, href, active, showPopup 
                 <span className="font-bold text-gray-700 text-sm tracking-wide">TRỢ GIÚP</span>
               </button>
               
-              <button className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors">
+              <button className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors"
+                onClick={()=>router.push('/login')}
+              >
                 <span className="font-bold text-gray-700 text-sm tracking-wide">ĐĂNG XUẤT</span>
               </button>
             </div>
@@ -120,8 +122,8 @@ export const Sidebar: React.FC = () => {
               />
             }
             label="LEARN"
-            href="/"
-            active={pathname === "/"}
+            href="/learn"
+            active={pathname === "/learn"}
           />
         </div>
 
@@ -136,8 +138,8 @@ export const Sidebar: React.FC = () => {
               />
             }
             label="LETTERS"
-            href="/letters"
-            active={pathname === "/letters"}
+            href="/learn/letters"
+            active={pathname === "/learn/letters"}
           />
         </div>
 
@@ -152,8 +154,8 @@ export const Sidebar: React.FC = () => {
               />
             }
             label="LEADERBOARDS"
-            href="/leaderboards"
-            active={pathname === "/leaderboards"}
+            href="/learn/leaderboards"
+            active={pathname === "/learn/leaderboards"}
           />
         </div>
 
@@ -161,8 +163,8 @@ export const Sidebar: React.FC = () => {
           <NavItem
             icon={<Icon icon="noto:bust-in-silhouette" width={28} />}
             label="PROFILE"
-            href="/profile"
-            active={pathname === "/profile"}
+            href="/learn/profile"
+            active={pathname === "/learn/profile"}
           />
         </div>
 

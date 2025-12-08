@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 export default function Profile() {
   return (
-    <div className="min-h-screen bg-gray-50 p-4 relative z-20">
+    <div className="min-h-screen p-4 relative z-20">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -11,10 +11,10 @@ export default function Profile() {
         .animate-spin-slow { animation: spin 18s linear infinite; }
       `}</style>
 
-      <div className="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
+      <div className="max-w-3xl mx-auto bg-white rounded-3xl overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-b from-blue-100 to-blue-50 p-8 text-center relative">
-          <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg text-lg">
+        <div className="bg-gradient-to-b bg-cyan-100 p-8 text-center relative">
+          <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center text-lg">
             ✏️
           </button>
           

@@ -1,6 +1,6 @@
   import React, { useState,useRef,useEffect } from 'react';
   import { Star, Package, Award, X } from 'lucide-react';
-
+  import { useRouter } from 'next/navigation';
 
   interface LessonNodeProps {
     type: 'lesson' | 'chest' | 'trophy';
@@ -52,7 +52,7 @@
     const buttonRef = useRef<HTMLButtonElement>(null);
 const [showModal, setShowModal] = useState(false);
 const [modalPos, setModalPos] = useState({ top: 0, left: 0 });
-
+const router = useRouter();
 const openModal = () => {
   setShowModal(true);
 };
@@ -168,10 +168,10 @@ const getColors = () => {
     };
 
     const handleStartLesson = () => {
-      setShowModal(false);
-      if (onClick) {
-        onClick();
-      }
+      router.push('/lesson');
+        
+        // Tùy chọn: Đóng modal sau khi bắt đầu chuyển hướng
+        setShowModal(false);
     };
 
     return (
@@ -326,10 +326,12 @@ const getColors = () => {
 
               <button
                 onClick={handleStartLesson}
-                className="w-full bg-white text-lg font-bold py-4 rounded-xl"
-                style={{ color: colorToHex(color) }}
+                className="w-full bg-white text-lg font-bold py-4 rounded-xl cursor-pointer transition-all duration-200 hover:brightness-130"
+                style={{
+                  color: colorToHex(color)
+                }}
               >
-                START +{xpReward} XP
+                  START +{xpReward} XP
               </button>
             </div>
           </div>
