@@ -121,7 +121,7 @@ export const Sidebar: React.FC = () => {
                 alt="learn"
               />
             }
-            label="LEARN"
+            label="HỌC"
             href="/learn"
             active={pathname === "/learn"}
           />
@@ -137,7 +137,7 @@ export const Sidebar: React.FC = () => {
                 alt="letters"
               />
             }
-            label="LETTERS"
+            label="BẢNG CHỮ CÁI"
             href="/learn/letters"
             active={pathname === "/learn/letters"}
           />
@@ -153,7 +153,7 @@ export const Sidebar: React.FC = () => {
                 alt="leaderboards"
               />
             }
-            label="LEADERBOARDS"
+            label="BẢNG XẾP HẠNG"
             href="/learn/leaderboards"
             active={pathname === "/learn/leaderboards"}
           />
@@ -162,7 +162,7 @@ export const Sidebar: React.FC = () => {
         <div>
           <NavItem
             icon={<Icon icon="noto:bust-in-silhouette" width={28} />}
-            label="PROFILE"
+            label="HỒ SƠ NGƯỜI DÙNG"
             href="/learn/profile"
             active={pathname === "/learn/profile"}
           />
@@ -178,7 +178,7 @@ export const Sidebar: React.FC = () => {
                 alt="more"
               />
             }
-            label="MORE"
+            label="THÊM"
             href="/more"
             active={pathname === "/more"}
             showPopup={true}

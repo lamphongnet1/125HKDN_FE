@@ -102,7 +102,7 @@ export default function QuizPage() {
       data: {
         label: 'CÂU NÓI CHỦ ĐỀ',
         question: 'Xin cho tôi trà',
-        videoUrl: '/videos/xin_cho_toi_tra.mp4',
+        videoUrl: 'https://cdn.pixabay.com/video/2024/05/06/210926_large.mp4',
         options: ['みず ください', 'ごはん ください', 'おちゃ ください'],
         correctAnswer: 'おちゃ ください',
         meaning: 'Xin cho tôi trà'
@@ -260,13 +260,8 @@ export default function QuizPage() {
       {/* Header */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center text-red-500 font-bold text-lg">
-            <span className="mr-1">❤️</span>
-            <span>{lives}</span>
-          </div>
-
           <button
-            onClick={handleSkip}
+            onClick={() => router.push('/learn')}
             className="text-gray-400 hover:text-gray-600 font-bold text-2xl"
           >
             ✕

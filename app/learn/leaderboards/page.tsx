@@ -13,7 +13,7 @@ export default function Leaderboard() {
       name: 'GhostjZunn',
       verified: true,
       superBadge: true,
-      score: '10001 KN',
+      score: '10001 Điểm',
       highlight: true
     },
     {
@@ -21,35 +21,35 @@ export default function Leaderboard() {
       avatar: '😎',
       name: 'Lê Trâm Anh Hoàng',
       badge: '🍿',
-      score: '3828 KN'
+      score: '3828 Điểm'
     },
     {
       rank: 3,
       avatar: '🐵',
       name: 'Sena セナ',
       superBadge: true,
-      score: '3804 KN'
+      score: '3804 Điểm'
     },
     {
       rank: 4,
       avatar: '👨‍💼',
       name: 'yuduki',
       subtitle: '🔥 hơn 1 năm',
-      score: '3559 KN'
+      score: '3559 Điểm'
     },
     {
       rank: 5,
       avatar: '😎',
       name: 'Đậu',
       badge: '🎉',
-      score: '3478 KN'
+      score: '3478 Điểm'
     },
     {
       rank: 6,
       avatar: '🦍',
       name: 'Thành Lâm HR',
       superBadge: true,
-      score: '3320 KN'
+      score: '3320 Điểm'
     }
   ];
 
@@ -65,9 +65,8 @@ export default function Leaderboard() {
         <div className="bg-white rounded-3xl overflow-hidden">
           {/* Header */}
           <div className="bg-gradient-to-b px-6 py-8 text-center">
-            <h1 className="text-3xl font-black text-gray-800 mb-2">Giải đấu Kim Cương</h1>
-            <p className="text-gray-500 text-base mb-1">Top 8 đủ điều kiện tham gia Giải vô địch</p>
-            <p className="text-yellow-500 font-bold text-lg">3 ngày</p>
+            <h1 className="text-3xl font-black text-gray-800 mb-2">Bảng xếp hạng</h1>
+            <p className="text-gray-500 text-base mb-1">Top 6 người học tốt nhất</p>
           </div>
 
           {/* Leaderboard List */}
@@ -95,34 +94,14 @@ export default function Leaderboard() {
                     <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center text-2xl border-4 border-white shadow-md">
                       {user.avatar}
                     </div>
-                    {user.superBadge && (
-                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center border-2 border-white">
-                        <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
-                          <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                        </svg>
-                      </div>
-                    )}
-                    {user.badge && (
-                      <div className="absolute -bottom-1 -right-1 text-lg">
-                        {user.badge}
-                      </div>
-                    )}
                   </div>
 
                   {/* User Info */}
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-gray-800 text-base">{user.name}</span>
-                      {user.verified && (
-                        <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                        </svg>
-                      )}
                     </div>
-                    {user.subtitle && (
-                      <div className="text-sm text-gray-600 mt-0.5">{user.subtitle}</div>
-                    )}
+
                   </div>
                 </div>
 

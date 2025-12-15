@@ -32,32 +32,29 @@ export default function Profile() {
           <h1 className="text-3xl font-black mb-1">Bảo Nguyễn</h1>
           <p className="text-gray-600 mb-2">BoNguyen774305</p>
           <p className="text-gray-500 text-sm mb-4">Đã tham gia Tháng Ba 2023</p>
-          <p className="text-blue-500">
-            Đang theo dõi <strong>0</strong> · 0 Người theo dõi 🇺🇸
-          </p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4 p-6">
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
-            <div className="text-3xl mb-2">🔥</div>
+            <div className="text-3xl mb-2">🎯</div>
             <div className="text-3xl font-extrabold">0</div>
-            <div className="text-sm text-gray-600 mt-1">Ngày streak</div>
+            <div className="text-sm text-gray-600 mt-1">Chương đã học tới</div>
           </div>
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
-            <div className="text-3xl mb-2">⚡</div>
+            <div className="text-3xl mb-2">💪</div>
             <div className="text-3xl font-extrabold text-yellow-500">228</div>
-            <div className="text-sm text-gray-600 mt-1">Tổng điểm KN</div>
+            <div className="text-sm text-gray-600 mt-1">Tổng điểm </div>
           </div>
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
             <div className="text-3xl mb-2">🏆</div>
             <div className="text-base font-extrabold text-gray-500">Chưa có xếp hạng</div>
-            <div className="text-sm text-gray-600 mt-1">Giải đấu hiện tại</div>
+            <div className="text-sm text-gray-600 mt-1">Thứ hạng trên bảng xếp hạng</div>
           </div>
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
-            <div className="text-3xl mb-2">🥉</div>
+            <div className="text-3xl mb-2">🕒</div>
             <div className="text-3xl font-extrabold text-gray-500">0</div>
-            <div className="text-sm text-gray-600 mt-1">Số lần đạt top 3</div>
+            <div className="text-sm text-gray-600 mt-1">Số giờ online</div>
           </div>
         </div>
 

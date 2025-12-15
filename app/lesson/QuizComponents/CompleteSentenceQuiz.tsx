@@ -20,7 +20,7 @@ export default function CompleteSentenceQuiz({
         Sắp xếp các từ để tạo thành câu hoàn chỉnh
       </h2>
       <p className="text-gray-600 mb-6">
-        {translation} ({sentence})
+        {translation}
       </p>
       
       {/* Answer Area */}
