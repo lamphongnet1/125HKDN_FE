@@ -38,7 +38,7 @@ export const RightSidebar = () => {
   };
 
   return (
-    <div className="w-120 h-screen mt-10">
+    <div className="sticky top-10 self-start pt-10 px-4">
 
       {/* User Profile Card */}
       <div className="bg-white rounded-lg p-4 mb-4 border-2 border-[#e5e5e5]">
