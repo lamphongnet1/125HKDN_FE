@@ -74,8 +74,12 @@ export default function Leaderboard() {
 
                       {/* Avatar with Badge */}
                       <div className="relative">
-                        <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center text-2xl border-4 border-white shadow-md">
-                          {avatar}
+                        <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center text-2xl border-4 border-white shadow-md overflow-hidden">
+                          <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s"
+                            alt="User Avatar"
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                       </div>
 

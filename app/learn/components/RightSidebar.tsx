@@ -43,8 +43,12 @@ export const RightSidebar = () => {
       {/* User Profile Card */}
       <div className="bg-white rounded-lg p-4 mb-4 border-2 border-[#e5e5e5]">
         <div className="flex items-center gap-3 pb-3 border-b border-gray-200">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-            {user ? getInitials(user.HoTen) : 'U'}
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg overflow-hidden">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s"
+              alt="User Avatar"
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="flex-1">
             <div className="font-semibold text-gray-800">

@@ -64,14 +64,17 @@ export default function Profile() {
           </button>
 
           <div className="relative inline-block mb-5">
+            {/* Spinning border ring */}
             <div className="w-36 h-36 border-4 border-dashed border-green-500 rounded-full absolute -top-2 -left-2 animate-spin-slow" />
-            <svg className="w-32 h-32 border-8 border-white rounded-full shadow-xl" viewBox="0 0 128 128">
-              <circle cx="64" cy="64" r="50" fill="#a0e5ff" />
-              <circle cx="64" cy="44" r="25" fill="#7fd1ff" />
-              <circle cx="49" cy="54" r="20" fill="#7fd1ff" />
-              <circle cx="79" cy="54" r="20" fill="#7fd1ff" />
-              <text x="64" y="72" fontSize="50" textAnchor="middle" fill="white">+</text>
-            </svg>
+
+            {/* Avatar image */}
+            <div className="w-32 h-32 border-8 border-white rounded-full shadow-xl overflow-hidden bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF02Jj8T2t7PdkytAw42HDuuSz7yXguKn8Lg&s"
+                alt="Profile Avatar"
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
 
           <h1 className="text-3xl font-black mb-1">{user.HoTen}</h1>
