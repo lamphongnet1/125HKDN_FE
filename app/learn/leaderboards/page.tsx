@@ -45,7 +45,7 @@ export default function Leaderboard() {
           {/* Header */}
           <div className="bg-gradient-to-b px-6 py-8 text-center">
             <h1 className="text-3xl font-black text-gray-800 mb-2">Bảng xếp hạng</h1>
-            <p className="text-gray-500 text-base mb-1">Top 6 người học tốt nhất</p>
+            <p className="text-gray-500 text-base mb-1">Top 5 người học tốt nhất</p>
           </div>
 
           {/* Leaderboard List */}

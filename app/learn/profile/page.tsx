@@ -11,9 +11,11 @@ type User = {
 
 export default function Profile() {
   const [user, setUser] = useState<User | null>(null);
+  const [rank, setRank] = useState<number | null>(null);
 
+  const userID = 1;
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/users/1")
+    fetch("http://127.0.0.1:8000/api/users/" + userID)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
@@ -22,6 +24,22 @@ export default function Profile() {
       })
       .catch(err => console.error(err));
   }, []);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/users/top-score")
+      .then(res => res.json())
+      .then(json => {
+        if (json && json.data) {
+          const entry = json.data.find((item: any) => item.ID_User === userID);
+          if (entry) {
+            setRank(entry.stt);
+          } else {
+            setRank(null);
+          }
+        }
+      })
+      .catch(err => console.error(err));
+  }, [userID]);
 
   if (!user) {
     return <div className="p-10">Đang tải dữ liệu...</div>;
@@ -42,14 +60,14 @@ export default function Profile() {
           <button className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center text-lg">
             ✏️
           </button>
-          
+
           <div className="relative inline-block mb-5">
             <div className="w-36 h-36 border-4 border-dashed border-green-500 rounded-full absolute -top-2 -left-2 animate-spin-slow" />
             <svg className="w-32 h-32 border-8 border-white rounded-full shadow-xl" viewBox="0 0 128 128">
-              <circle cx="64" cy="64" r="50" fill="#a0e5ff"/>
-              <circle cx="64" cy="44" r="25" fill="#7fd1ff"/>
-              <circle cx="49" cy="54" r="20" fill="#7fd1ff"/>
-              <circle cx="79" cy="54" r="20" fill="#7fd1ff"/>
+              <circle cx="64" cy="64" r="50" fill="#a0e5ff" />
+              <circle cx="64" cy="44" r="25" fill="#7fd1ff" />
+              <circle cx="49" cy="54" r="20" fill="#7fd1ff" />
+              <circle cx="79" cy="54" r="20" fill="#7fd1ff" />
               <text x="64" y="72" fontSize="50" textAnchor="middle" fill="white">+</text>
             </svg>
           </div>
@@ -79,7 +97,9 @@ export default function Profile() {
           </div>
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
             <div className="text-3xl mb-2">🏆</div>
-            <div className="text-base font-extrabold text-gray-500">Chưa có xếp hạng</div>
+            <div className="text-base font-extrabold text-gray-500">
+              {rank !== null ? `Thứ hạng #${rank}` : 'Chưa có xếp hạng'}
+            </div>
             <div className="text-sm text-gray-600 mt-1">Thứ hạng trên bảng xếp hạng</div>
           </div>
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
@@ -89,10 +109,10 @@ export default function Profile() {
           </div>
         </div>
 
-       
+
       </div>
 
-     
+
     </div>
   );
 }
