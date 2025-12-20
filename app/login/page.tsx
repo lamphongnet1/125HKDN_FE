@@ -1,11 +1,30 @@
 "use client";
 import { useState } from "react";
 import Head from "next/head";
+import { registerUser, loginUser } from "../services/userService";
+import { useRouter } from "next/navigation";
 
 export default function Auth() {
   const [tab, setTab] = useState<"login" | "register">("login");
   const [showDetails, setShowDetails] = useState(false);
   const [age, setAge] = useState<number | "">("");
+
+  const router = useRouter();
+
+  // signup state
+  const [signupName, setSignupName] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [signupDiem, setSignupDiem] = useState<number | undefined>(undefined);
+  const [signupSoGioOnline, setSignupSoGioOnline] = useState<number | undefined>(undefined);
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [signupMessage, setSignupMessage] = useState<string | null>(null);
+
+  // login state
+  const [loginId, setLoginId] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginMessage, setLoginMessage] = useState<string | null>(null);
 
   const handleNext = () => {
     if (age === "" || age < 13) {
@@ -13,6 +32,96 @@ export default function Auth() {
       return;
     }
     setShowDetails(true);
+  };
+
+  const handleRegister = async () => {
+    setSignupMessage(null);
+    if (!signupEmail || !signupPassword) {
+      setSignupMessage('Vui lòng nhập email và mật khẩu');
+      return;
+    }
+
+    setSignupLoading(true);
+    try {
+      const payload = {
+        name: signupName || undefined,
+        email: signupEmail.trim(),
+        password: signupPassword,
+        age: typeof age === 'number' ? age : undefined,
+        diem: signupDiem,
+        soGioOnline: signupSoGioOnline,
+      };
+
+      const json = await registerUser(payload as any);
+      if (json && json.token) {
+        localStorage.setItem('token', json.token);
+        setSignupMessage('Đăng ký thành công — bạn đã được đăng nhập');
+        setTimeout(() => router.push('/learn/profile'), 900);
+      } else {
+        setSignupMessage(json?.message || 'Đăng ký thất bại');
+      }
+    } catch (err: any) {
+      setSignupMessage(err?.message || 'Lỗi khi đăng ký');
+    } finally {
+      setSignupLoading(false);
+    }
+  };
+
+  const fillAndRegisterDemo = async () => {
+    // The user-provided demo data
+    const demo = {
+      HoTen: 'Nguyễn Bảo',
+      Email: 'vanbao@example.com',
+      MatKhau: 'password123',
+      Diem: 9600,
+      SoGioOnline: 5,
+    };
+
+    // prefill fields
+    setAge(20);
+    setShowDetails(true);
+    setSignupName(demo.HoTen);
+    setSignupEmail(demo.Email);
+    setSignupPassword(demo.MatKhau);
+    setSignupDiem(demo.Diem);
+    setSignupSoGioOnline(demo.SoGioOnline);
+
+    // try register and then login (if not already logged in)
+    setSignupLoading(true);
+    try {
+      await handleRegister();
+      // attempt login with same credentials
+      setLoginId(demo.Email);
+      setLoginPassword(demo.MatKhau);
+      await new Promise((r) => setTimeout(r, 300));
+      await handleLogin();
+    } finally {
+      setSignupLoading(false);
+    }
+  };
+
+  const handleLogin = async () => {
+    setLoginMessage(null);
+    if (!loginId || !loginPassword) {
+      setLoginMessage('Vui lòng nhập email và mật khẩu');
+      return;
+    }
+
+    setLoginLoading(true);
+    try {
+      const json = await loginUser(loginId.trim(), loginPassword);
+      if (json && json.token) {
+        localStorage.setItem('token', json.token);
+        setLoginMessage('Đăng nhập thành công');
+        setTimeout(() => router.push('/learn/profile'), 700);
+      } else {
+        setLoginMessage(json?.message || 'Đăng nhập thất bại');
+      }
+    } catch (err: any) {
+      setLoginMessage(err?.message || 'Lỗi khi đăng nhập');
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
   return (
@@ -54,6 +163,8 @@ export default function Auth() {
                 type="text"
                 className="ô_nhập"
                 placeholder="Email hoặc tên đăng nhập"
+                value={loginId}
+                onChange={(e) => setLoginId(e.target.value)}
               />
             </div>
             <div className="nhóm_input">
@@ -61,21 +172,13 @@ export default function Auth() {
                 type="password"
                 className="ô_nhập"
                 placeholder="Mật khẩu"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
               />
-              <a
-                href="#"
-                style={{
-                  float: "right",
-                  fontSize: "14px",
-                  color: "#58cc02",
-                  marginTop: "5px",
-                  display: "block",
-                }}
-              >
-                Quên?
-              </a>
+              <a href="#" className="quen-link">Quên?</a>
             </div>
-            <button className="nút_xanh">ĐĂNG NHẬP</button>
+            {loginMessage && <div className="form-message">{loginMessage}</div>}
+            <button className="nút_xanh" onClick={handleLogin} disabled={loginLoading}>{loginLoading ? "Đang đăng nhập..." : "ĐĂNG NHẬP"}</button>
 
             <div className="đường_kẻ">
               <span>HOẶC</span>
@@ -84,15 +187,17 @@ export default function Auth() {
             <div className="đăng_nhập_mạng_xã_hội">
               <div className="nút_mạng_xã_hội">
                 <img
-                  src="https://duolingo.com/images/google-logo.svg"
+                  src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
                   width="20"
+                  alt="Google"
                 />
                 GOOGLE
               </div>
               <div className="nút_mạng_xã_hội">
                 <img
-                  src="https://duolingo.com/images/facebook-logo.svg"
+                  src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
                   width="20"
+                  alt="Facebook"
                 />
                 FACEBOOK
               </div>
@@ -134,18 +239,33 @@ export default function Auth() {
             )}
 
             {showDetails && (
-              <div id="phần_chi_tiết" style={{ marginTop: 20 }}>
+              <div id="phần_chi_tiết" className="phần_chi_tiết">
                 <h1 className="tiêu_đề">Tạo hồ sơ</h1>
+
                 <div className="nhóm_input">
-                  <input type="text" className="ô_nhập" placeholder="Tên (tùy chọn)" />
+                  <input type="text" className="ô_nhập" placeholder="Tên (tùy chọn)" value={signupName} onChange={(e) => setSignupName(e.target.value)} />
                 </div>
                 <div className="nhóm_input">
-                  <input type="email" className="ô_nhập" placeholder="Email" />
+                  <input type="email" className="ô_nhập" placeholder="Email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} />
                 </div>
                 <div className="nhóm_input">
-                  <input type="password" className="ô_nhập" placeholder="Mật khẩu" />
+                  <input type="password" className="ô_nhập" placeholder="Mật khẩu" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} />
                 </div>
-                <button className="nút_xanh">TẠO TÀI KHOẢN</button>
+
+                <div className="nhóm_input">
+                  <input type="number" className="ô_nhập" placeholder="Điểm (tùy chọn)" value={signupDiem ?? ''} onChange={(e) => setSignupDiem(e.target.value === '' ? undefined : Number(e.target.value))} />
+                </div>
+                <div className="nhóm_input">
+                  <input type="number" className="ô_nhập" placeholder="Số giờ online (tùy chọn)" value={signupSoGioOnline ?? ''} onChange={(e) => setSignupSoGioOnline(e.target.value === '' ? undefined : Number(e.target.value))} />
+                </div>
+
+                {signupMessage && <div className="form-message">{signupMessage}</div>}
+
+                <button className="nút_xanh" onClick={handleRegister} disabled={signupLoading}>
+                  {signupLoading ? "Đang tạo..." : "TẠO TÀI KHOẢN"}
+                </button>
+
+                <button className="nút_xám secondary-button" onClick={fillAndRegisterDemo} disabled={signupLoading}>Tạo & đăng nhập thử (demo)</button>
               </div>
             )}
 
@@ -156,15 +276,17 @@ export default function Auth() {
             <div className="đăng_nhập_mạng_xã_hội">
               <div className="nút_mạng_xã_hội">
                 <img
-                  src="https://duolingo.com/images/google-logo.svg"
+                  src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
                   width="20"
+                  alt="Google"
                 />
                 GOOGLE
               </div>
               <div className="nút_mạng_xã_hội">
                 <img
-                  src="https://duolingo.com/images/facebook-logo.svg"
+                  src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
                   width="20"
+                  alt="Facebook"
                 />
                 FACEBOOK
               </div>
@@ -182,7 +304,7 @@ export default function Auth() {
           </div>
         )}
       </div>
-      
+
       {/* CSS GLOBAL: Cần thiết để body có đủ chiều cao cho việc căn giữa */}
       <style jsx global>{`
         html, body {
@@ -193,169 +315,162 @@ export default function Auth() {
       `}</style>
 
       <style jsx>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
         body {
           font-family: "Inter", Arial, sans-serif;
-          background: #fff;
+          background: linear-gradient(180deg, #f6fbf1 0%, #ffffff 100%);
           display: flex;
-          justify-content: center; /* Căn giữa theo chiều ngang */
-          align-items: center; /* Căn giữa theo chiều dọc */
-          min-height: 100vh; /* Đảm bảo body có đủ chiều cao của viewport */
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          padding: 36px 16px;
         }
 
         .hộp_chính {
+          margin-top: 50px;
+          margin-right: auto;
+          margin-bottom: auto;
+          margin-left: auto;
           width: 420px;
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+          max-width: 100%;
+          background: linear-gradient(180deg,#ffffff 0%, #fbfff7 100%);
+          border-radius: 14px;
+          box-shadow: 0 12px 30px rgba(6, 10, 15, 0.08), 0 6px 10px rgba(6, 10, 15, 0.04);
           overflow: hidden;
           position: relative;
+          border: 1px solid rgba(88,204,2,0.06);
+          transition: transform 160ms ease, box-shadow 160ms ease;
         }
+        .hộp_chính:hover { transform: translateY(-6px); }
 
         .nút_đóng {
           position: absolute;
-          top: 15px;
-          right: 15px;
-          font-size: 28px;
+          top: 14px;
+          right: 14px;
+          width: 36px;
+          height: 36px;
+          line-height: 36px;
+          text-align: center;
+          border-radius: 50%;
+          background: rgba(0,0,0,0.04);
+          color: #475569;
           cursor: pointer;
-          color: #aaa;
+          font-size: 20px;
+          transition: background 0.12s, transform 0.12s;
         }
+        .nút_đóng:hover { background: rgba(0,0,0,0.06); transform: scale(1.02); }
 
         .thanh_chuyển {
           display: flex;
-          background: #f5f5f5;
+          gap: 8px;
+          padding: 12px;
+          align-items: center;
+          background: transparent;
         }
 
         .nút_tab {
           flex: 1;
-          padding: 18px;
+          padding: 12px 14px;
           border: none;
-          background: none;
-          font-size: 16px;
-          font-weight: 600;
+          background: transparent;
+          font-size: 15px;
+          font-weight: 700;
           cursor: pointer;
-          transition: background 0.2s, color 0.2s; /* Thêm transition */
+          color: #4b5563;
+          border-radius: 10px;
+          transition: background 140ms, color 140ms;
         }
-        .nút_tab:hover:not(.đang_chọn) {
-            background: #e8e8e8; /* Hiệu ứng hover cho tab không được chọn */
-        }
+        .nút_tab:hover { background: rgba(15,23,42,0.03); }
         .nút_tab.đang_chọn {
-          background: white;
-          border-bottom: 4px solid #58cc02;
-          color: #58cc02;
+          color: #236100;
+          background: rgba(88,204,2,0.08);
+          box-shadow: inset 0 -4px 0 #58cc02;
         }
 
         .tiêu_đề {
           text-align: center;
-          padding: 30px 40px 10px;
-          font-size: 28px;
-          font-weight: 700;
+          padding: 20px 40px 8px;
+          font-size: 26px;
+          font-weight: 800;
+          color: #0b1220;
         }
 
-        .form {
-          padding: 0 40px 30px;
-        }
+        .form { padding: 6px 40px 30px; animation: fadeIn 220ms ease; }
 
-        .nhóm_input {
-          margin-bottom: 16px;
-        }
+        .nhóm_input { margin-bottom: 16px; }
         .ô_nhập {
           width: 100%;
           padding: 14px 16px;
-          border: 1.5px solid #ddd;
-          border-radius: 8px;
-          font-size: 16px;
+          border: 1px solid #f0f0f0;
+          border-radius: 12px;
+          font-size: 15px;
+          background: #fff;
+          transition: box-shadow 140ms, border-color 140ms;
         }
         .ô_nhập:focus {
           outline: none;
           border-color: #58cc02;
-          box-shadow: 0 0 0 4px rgba(88, 204, 2, 0.15);
+          box-shadow: 0 8px 26px rgba(88,204,2,0.06);
         }
+
+        .quen-link { float: right; font-size: 14px; color: #58cc02; margin-top: 6px; display: block; text-decoration: none; }
+        .quen-link:hover { text-decoration: underline; }
 
         .nút_xanh {
           width: 100%;
-          padding: 15px;
-          background: #58cc02;
+          padding: 14px;
+          background: linear-gradient(90deg,#58cc02,#3fb000);
           color: white;
           border: none;
-          border-radius: 50px;
-          font-size: 16px;
-          font-weight: 600;
+          border-radius: 999px;
+          font-size: 15px;
+          font-weight: 700;
           cursor: pointer;
           margin-top: 10px;
-          transition: background 0.1s;
+          box-shadow: 0 8px 22px rgba(64,123,0,0.12);
+transition: transform 120ms, box-shadow 120ms;
         }
-        .nút_xanh:hover {
-          background: #4ab302;
-        }
-        .nút_xám {
-          background: #eee !important;
-          color: #777 !important;
-          pointer-events: none; /* Khóa nút khi nó màu xám */
-        }
+        .nút_xanh:hover { transform: translateY(-2px); }
+        .nút_xám { background: #f3f4f6 !important; color: #6b7280 !important; pointer-events: none; }
 
-        .đường_kẻ {
-          text-align: center;
-          margin: 25px 0;
-          position: relative;
-          color: #888;
-          font-size: 14px;
-        }
-        .đường_kẻ::before {
-          content: "";
-          position: absolute;
-          top: 50%;
-          left: 0;
-          right: 0;
-          height: 1px;
-          background: #ddd;
-        }
-        .đường_kẻ span {
-          background: white;
-          padding: 0 20px;
-          position: relative; /* Cần thiết để span nằm trên đường kẻ */
-        }
+        .đường_kẻ { text-align: center; margin: 24px 0; position: relative; color: #9ca3af; font-size: 13px; }
+        .đường_kẻ::before { content: ""; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #eee; }
+        .đường_kẻ span { background: transparent; padding: 0 12px; position: relative; color: #6b7280; }
 
-        .đăng_nhập_mạng_xã_hội {
-          display: flex;
-          gap: 12px;
-        }
+        .đăng_nhập_mạng_xã_hội { display: flex; gap: 12px; }
         .nút_mạng_xã_hội {
           flex: 1;
-          padding: 13px;
-          border: 1.5px solid #ddd;
-          border-radius: 8px;
+          padding: 12px;
+          border: 1px solid #eef2f7;
+          border-radius: 10px;
           background: white;
           cursor: pointer;
-          font-weight: 600;
+          font-weight: 700;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 10px;
-          transition: background 0.1s, border-color 0.1s;
+          transition: background 120ms, border-color 120ms, transform 120ms;
         }
-        .nút_mạng_xã_hội:hover {
-            background: #f8f8f8;
-            border-color: #c9c9c9;
-        }
+        .nút_mạng_xã_hội:hover { background: #fbfbfb; transform: translateY(-2px); }
+        .nút_mạng_xã_hội img { width: 18px; height: 18px; object-fit: contain; margin-right: 8px; }
 
-        .chú_thích {
-          font-size: 12px;
-          color: #666;
-          text-align: center;
-          margin-top: 25px;
-          line-height: 1.6;
-        }
-        .chú_thích a {
-          color: #58cc02;
-          text-decoration: none;
-        }
-        .chú_thích a:hover {
-            text-decoration: underline;
+        .phần_chi_tiết { margin-top: 20px; }
+
+        .form-message { color: #166534; font-weight: 600; text-align:center; margin-bottom: 8px; }
+        .secondary-button { width: 100%; padding: 12px; border-radius: 10px; margin-top: 8px; background: #f3f4f6; color: #374151; border: none; cursor: pointer; }
+        .secondary-button:disabled { opacity: 0.6; pointer-events: none; }
+        .chú_thích { font-size: 13px; color: #6b7280; text-align: center; margin-top: 24px; line-height: 1.6; }
+        .chú_thích a { color: #58cc02; text-decoration: none; }
+        .chú_thích a:hover { text-decoration: underline; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none; } }
+
+        @media (max-width: 480px) {
+          .hộp_chính { width: 92%; border-radius: 12px; }
+          .tiêu_đề { font-size: 22px; }
+          .form { padding-left: 20px; padding-right: 20px; }
         }
       `}</style>
     </>
