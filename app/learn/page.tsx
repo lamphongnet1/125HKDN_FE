@@ -1,18 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 import { LessonPath } from './components/LessonPath';
 import { Modal } from './components/Modal';
 import { Header } from './components/Header';
 
+type Chuong = {
+  TenChuong: string;
+  ThuTu: number;
+};
+
+
 export default function Page() {
+  const [chuong, setChuong] = useState<Chuong[] | null>(null);
+  
+    useEffect(() => {
+      fetch("http://127.0.0.1:8000/api/chuong")
+        .then(res => res.json())
+        .then(res => {
+          if (res.success) {
+            setChuong(res.data);
+          }
+        })
+        .catch(err => console.error(err));
+    }, []);
+  
+    
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [headerData, setHeaderData] = useState({
     unit: 'Chương 1',
     title: 'Order food 2',
     color: 'blue-400'
   });
-  const colors = ['blue-400', 'purple-400', 'yellow-400'];
+  const colors = ['blue-400', 'purple-400', 'yellow-400','green-400','orange-400'];
 
   const handleLessonPathInView = (label: string, pathId: number, color: string) => {
     setHeaderData({
@@ -21,6 +43,10 @@ export default function Page() {
       color: color,
     });
   };
+
+  if (!chuong) {
+      return <div className="p-10">Đang tải dữ liệu...</div>;
+  }
 
   return (
     <div className='w-full'>
@@ -34,7 +60,9 @@ export default function Page() {
       </div>
 
       <div className="mt-10 relative mx-auto">
-        <LessonPath 
+      {chuong.map((chuongcon,index) => {
+        return (
+          <LessonPath 
           nodes={[
             { type: 'lesson', status: 'active' },
             { type: 'lesson', status: 'locked' },
@@ -42,37 +70,15 @@ export default function Page() {
             { type: 'lesson', status: 'locked' },
             { type: 'trophy', status: 'locked' },
           ]}
-          pathId={1}
-          label="Order food"
+          pathId={chuongcon.ThuTu}
+          label={chuongcon.TenChuong}
           onInView={handleLessonPathInView}
-          color={colors[0]}
+          color={colors[chuongcon.ThuTu - 1]}
         />
-        <LessonPath 
-          nodes={[
-            { type: 'lesson', status: 'active' },
-            { type: 'lesson', status: 'locked' },
-            { type: 'chest', status: 'locked' },
-            { type: 'lesson', status: 'locked' },
-            { type: 'trophy', status: 'locked' },
-          ]}
-          pathId={2}
-          label="Order food 2"
-          onInView={handleLessonPathInView}
-          color={colors[1]}
-        />
-        <LessonPath 
-          nodes={[
-            { type: 'lesson', status: 'active' },
-            { type: 'lesson', status: 'locked' },
-            { type: 'chest', status: 'locked' },
-            { type: 'lesson', status: 'locked' },
-            { type: 'trophy', status: 'locked' },
-          ]}
-          pathId={3}
-          label="Order food 3"
-          onInView={handleLessonPathInView}
-          color={colors[2]}
-        />
+        );
+      })}
+
+       
       </div>
       
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

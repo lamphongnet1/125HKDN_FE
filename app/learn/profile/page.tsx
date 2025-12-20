@@ -1,7 +1,32 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+type User = {
+  HoTen: string;
+  Email: string;
+  Diem: number;
+  SoGioOnline: number;
+  created_at: string;
+};
 
 export default function Profile() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/users/1")
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          setUser(res.data);
+        }
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  if (!user) {
+    return <div className="p-10">Đang tải dữ liệu...</div>;
+  }
+
   return (
     <div className="min-h-screen p-4 relative z-20">
       <style>{`
@@ -29,22 +54,28 @@ export default function Profile() {
             </svg>
           </div>
 
-          <h1 className="text-3xl font-black mb-1">Bảo Nguyễn</h1>
-          <p className="text-gray-600 mb-2">BoNguyen774305</p>
-          <p className="text-gray-500 text-sm mb-4">Đã tham gia Tháng Ba 2023</p>
+          <h1 className="text-3xl font-black mb-1">{user.HoTen}</h1>
+          <p className="text-gray-600 mb-2">{user.Email}</p>
+          <p className="text-gray-500 text-sm mb-4">
+            Đã tham gia{" "}
+            {new Date(user.created_at).toLocaleDateString("vi-VN", {
+              month: "long",
+              year: "numeric",
+            })}
+          </p>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4 p-6">
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
             <div className="text-3xl mb-2">🎯</div>
-            <div className="text-3xl font-extrabold">0</div>
-            <div className="text-sm text-gray-600 mt-1">Chương đã học tới</div>
+            <div className="text-3xl font-extrabold">Chương đã học tới</div>
+            <div className="text-sm text-gray-600 mt-1">0</div>
           </div>
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
             <div className="text-3xl mb-2">💪</div>
-            <div className="text-3xl font-extrabold text-yellow-500">228</div>
-            <div className="text-sm text-gray-600 mt-1">Tổng điểm </div>
+            <div className="text-3xl font-extrabold text-yellow-500">Điểm hiện tại</div>
+            <div className="text-sm text-gray-600 mt-1">{user.Diem}</div>
           </div>
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
             <div className="text-3xl mb-2">🏆</div>
@@ -53,8 +84,8 @@ export default function Profile() {
           </div>
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
             <div className="text-3xl mb-2">🕒</div>
-            <div className="text-3xl font-extrabold text-gray-500">0</div>
-            <div className="text-sm text-gray-600 mt-1">Số giờ online</div>
+            <div className="text-3xl font-extrabold text-gray-500">Số giờ online</div>
+            <div className="text-sm text-gray-600 mt-1">{user.SoGioOnline}</div>
           </div>
         </div>
 
