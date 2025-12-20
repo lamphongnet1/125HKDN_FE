@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Head from "next/head";
-import { registerUser, loginUser } from "../services/userService";
+import { registerUser, loginUser } from "./services/userService";
 import { useRouter } from "next/navigation";
 
 export default function Auth() {
@@ -47,16 +47,16 @@ export default function Auth() {
         name: signupName || undefined,
         email: signupEmail.trim(),
         password: signupPassword,
-        age: typeof age === 'number' ? age : undefined,
-        diem: signupDiem,
-        soGioOnline: signupSoGioOnline,
       };
 
       const json = await registerUser(payload as any);
-      if (json && json.token) {
-        localStorage.setItem('token', json.token);
-        setSignupMessage('Đăng ký thành công — bạn đã được đăng nhập');
-        setTimeout(() => router.push('/learn/profile'), 900);
+      // API đăng ký thành công sẽ trả về user object
+      if (json && (json.user || json.message === 'User created successfully' || json.success)) {
+        setSignupMessage('Đăng ký thành công!');
+        // Refresh lại trang sau 1.5 giây
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
         setSignupMessage(json?.message || 'Đăng ký thất bại');
       }
@@ -110,10 +110,17 @@ export default function Auth() {
     setLoginLoading(true);
     try {
       const json = await loginUser(loginId.trim(), loginPassword);
-      if (json && json.token) {
-        localStorage.setItem('token', json.token);
+      // API chỉ trả về { user: {...} }, không có token
+      if (json && json.user) {
+        // Lưu toàn bộ user object
+        localStorage.setItem('user', JSON.stringify(json.user));
+        // Lưu ID_User riêng để dễ truy cập
+        if (json.user.ID_User !== undefined && json.user.ID_User !== null) {
+          localStorage.setItem('ID_User', String(json.user.ID_User));
+        }
         setLoginMessage('Đăng nhập thành công');
-        setTimeout(() => router.push('/learn/profile'), 700);
+        // Chuyển về trang /learn
+        setTimeout(() => router.push('/learn'), 700);
       } else {
         setLoginMessage(json?.message || 'Đăng nhập thất bại');
       }
@@ -135,9 +142,6 @@ export default function Auth() {
       </Head>
 
       <div className="hộp_chính">
-        <div className="nút_đóng" onClick={() => window.close()}>
-          &times;
-        </div>
 
         <div className="thanh_chuyển">
           <button
@@ -175,7 +179,6 @@ export default function Auth() {
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
               />
-              <a href="#" className="quen-link">Quên?</a>
             </div>
             {loginMessage && <div className="form-message">{loginMessage}</div>}
             <button className="nút_xanh" onClick={handleLogin} disabled={loginLoading}>{loginLoading ? "Đang đăng nhập..." : "ĐĂNG NHẬP"}</button>
@@ -219,88 +222,20 @@ export default function Auth() {
         {/* FORM ĐĂNG KÝ */}
         {tab === "register" && (
           <div className="form">
-            {!showDetails && (
-              <>
-                <h1 className="tiêu_đề">Bạn bao nhiêu tuổi?</h1>
-                <div className="nhóm_input">
-                  <input
-                    type="number"
-                    className="ô_nhập"
-                    placeholder="Tuổi"
-                    min={13}
-                    value={age}
-                    onChange={(e) => setAge(Number(e.target.value))}
-                  />
-                </div>
-                <button className="nút_xanh nút_xám" onClick={handleNext}>
-                  TIẾP THEO
-                </button>
-              </>
-            )}
-
-            {showDetails && (
-              <div id="phần_chi_tiết" className="phần_chi_tiết">
-                <h1 className="tiêu_đề">Tạo hồ sơ</h1>
-
-                <div className="nhóm_input">
-                  <input type="text" className="ô_nhập" placeholder="Tên (tùy chọn)" value={signupName} onChange={(e) => setSignupName(e.target.value)} />
-                </div>
-                <div className="nhóm_input">
-                  <input type="email" className="ô_nhập" placeholder="Email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} />
-                </div>
-                <div className="nhóm_input">
-                  <input type="password" className="ô_nhập" placeholder="Mật khẩu" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} />
-                </div>
-
-                <div className="nhóm_input">
-                  <input type="number" className="ô_nhập" placeholder="Điểm (tùy chọn)" value={signupDiem ?? ''} onChange={(e) => setSignupDiem(e.target.value === '' ? undefined : Number(e.target.value))} />
-                </div>
-                <div className="nhóm_input">
-                  <input type="number" className="ô_nhập" placeholder="Số giờ online (tùy chọn)" value={signupSoGioOnline ?? ''} onChange={(e) => setSignupSoGioOnline(e.target.value === '' ? undefined : Number(e.target.value))} />
-                </div>
-
-                {signupMessage && <div className="form-message">{signupMessage}</div>}
-
-                <button className="nút_xanh" onClick={handleRegister} disabled={signupLoading}>
-                  {signupLoading ? "Đang tạo..." : "TẠO TÀI KHOẢN"}
-                </button>
-
-                <button className="nút_xám secondary-button" onClick={fillAndRegisterDemo} disabled={signupLoading}>Tạo & đăng nhập thử (demo)</button>
-              </div>
-            )}
-
-            <div className="đường_kẻ">
-              <span>HOẶC</span>
+            <h1 className="tiêu_đề">Đăng ký</h1>
+            <div className="nhóm_input">
+              <input type="text" className="ô_nhập" placeholder="Tên" value={signupName} onChange={(e) => setSignupName(e.target.value)} />
             </div>
-
-            <div className="đăng_nhập_mạng_xã_hội">
-              <div className="nút_mạng_xã_hội">
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
-                  width="20"
-                  alt="Google"
-                />
-                GOOGLE
-              </div>
-              <div className="nút_mạng_xã_hội">
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg"
-                  width="20"
-                  alt="Facebook"
-                />
-                FACEBOOK
-              </div>
+            <div className="nhóm_input">
+              <input type="email" className="ô_nhập" placeholder="Email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} />
             </div>
-
-            <div className="chú_thích">
-              Khi đăng ký trên Duolingo, bạn đã đồng ý với{" "}
-              <a href="#">Các chính sách và Chính sách bảo mật</a> của chúng tôi.
-              <br />
-              <br />
-              Trang này được reCAPTCHA Enterprise bảo vệ và tuân theo{" "}
-              <a href="#">Chính sách bảo mật</a> và{" "}
-              <a href="#">Điều khoản dịch vụ</a> của Google.
+            <div className="nhóm_input">
+              <input type="password" className="ô_nhập" placeholder="Mật khẩu" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} />
             </div>
+            {signupMessage && <div className="form-message">{signupMessage}</div>}
+            <button className="nút_xanh" onClick={handleRegister} disabled={signupLoading}>
+              {signupLoading ? "Đang tạo..." : "TẠO TÀI KHOẢN"}
+            </button>
           </div>
         )}
       </div>
@@ -343,23 +278,6 @@ export default function Auth() {
           transition: transform 160ms ease, box-shadow 160ms ease;
         }
         .hộp_chính:hover { transform: translateY(-6px); }
-
-        .nút_đóng {
-          position: absolute;
-          top: 14px;
-          right: 14px;
-          width: 36px;
-          height: 36px;
-          line-height: 36px;
-          text-align: center;
-          border-radius: 50%;
-          background: rgba(0,0,0,0.04);
-          color: #475569;
-          cursor: pointer;
-          font-size: 20px;
-          transition: background 0.12s, transform 0.12s;
-        }
-        .nút_đóng:hover { background: rgba(0,0,0,0.06); transform: scale(1.02); }
 
         .thanh_chuyển {
           display: flex;
