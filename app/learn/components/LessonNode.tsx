@@ -1,6 +1,7 @@
   import React, { useState,useRef,useEffect } from 'react';
   import { Star, Package, Award, X } from 'lucide-react';
   import { useRouter } from 'next/navigation';
+  import { BaiHoc } from './type';
 
   interface LessonNodeProps {
     type: 'lesson' | 'chest' | 'trophy';
@@ -8,7 +9,7 @@
     position: { x: number; y: number };
     onClick?: () => void;
     color?: string;
-    lessonTitle?: string;
+    lessonTitle: string;
     lessonNumber?: number;
     totalLessons?: number;
     xpReward?: number;
@@ -44,19 +45,31 @@
     position,
     onClick,
     color = 'blue-400',
-    lessonTitle = 'Order drinks',
+    lessonTitle,
     lessonNumber = 1,
-    totalLessons = 4,
+    totalLessons = 5,
     xpReward = 10,
   }) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
-const [showModal, setShowModal] = useState(false);
-const [modalPos, setModalPos] = useState({ top: 0, left: 0 });
-const router = useRouter();
-const openModal = () => {
-  setShowModal(true);
-};
+    const [showModal, setShowModal] = useState(false);
+    const [modalPos, setModalPos] = useState({ top: 0, left: 0 });
+    const [baihoc, setBaihoc] = useState<BaiHoc[] | null>(null);
+    const router = useRouter();
+    const openModal = () => {
+      setShowModal(true);
+    };
 
+      
+        useEffect(() => {
+          fetch("http://127.0.0.1:8000/api/chuong")
+            .then(res => res.json())
+            .then(res => {
+              if (res.success) {
+                setBaihoc(res.data);
+              }
+            })
+            .catch(err => console.error(err));
+        }, []);
 useEffect(() => {
   if (showModal && buttonRef.current) {
     const rect = buttonRef.current.getBoundingClientRect();
