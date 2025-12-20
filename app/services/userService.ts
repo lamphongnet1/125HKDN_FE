@@ -55,6 +55,8 @@ export type RegisterData = {
   email: string;
   password: string;
   age?: number;
+  diem?: number; // điểm (score)
+  soGioOnline?: number; // số giờ online
 };
 
 export async function registerUser(data: RegisterData): Promise<LoginResponse> {
@@ -75,8 +77,8 @@ export async function registerUser(data: RegisterData): Promise<LoginResponse> {
     // fallback simulation for local dev
     if ((err as any).name === "TypeError" || (err as any).message?.includes("Failed to fetch")) {
       await new Promise((r) => setTimeout(r, 700));
-      if (data.email.endsWith("@demo.com")) {
-        return { token: "demo-token", user: { id: 2, name: data.name || "Demo", email: data.email } };
+      if (data.email.endsWith("@demo.com") || data.email.endsWith("@example.com")) {
+        return { token: "demo-token", user: { id: 2, name: data.name || "Demo", email: data.email, diem: data.diem, soGioOnline: data.soGioOnline } };
       }
       throw new Error("Không thể kết nối tới server (demo)");
     }

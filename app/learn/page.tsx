@@ -5,12 +5,7 @@ import { useState, useEffect } from 'react';
 import { LessonPath } from './components/LessonPath';
 import { Modal } from './components/Modal';
 import { Header } from './components/Header';
-
-type Chuong = {
-  TenChuong: string;
-  ThuTu: number;
-};
-
+import { Chuong } from './components/type';
 
 export default function Page() {
   const [chuong, setChuong] = useState<Chuong[] | null>(null);
@@ -25,7 +20,7 @@ export default function Page() {
         })
         .catch(err => console.error(err));
     }, []);
-  
+    console.log(chuong)
     
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,15 +56,10 @@ export default function Page() {
 
       <div className="mt-10 relative mx-auto">
       {chuong.map((chuongcon,index) => {
+        
         return (
-          <LessonPath 
-          nodes={[
-            { type: 'lesson', status: 'active' },
-            { type: 'lesson', status: 'locked' },
-            { type: 'chest', status: 'locked' },
-            { type: 'lesson', status: 'locked' },
-            { type: 'trophy', status: 'locked' },
-          ]}
+          <LessonPath
+          key={index} 
           pathId={chuongcon.ThuTu}
           label={chuongcon.TenChuong}
           onInView={handleLessonPathInView}

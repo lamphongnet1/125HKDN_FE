@@ -1,11 +1,30 @@
 "use client";
 import { useState } from "react";
 import Head from "next/head";
+import { registerUser, loginUser } from "../services/userService";
+import { useRouter } from "next/navigation";
 
 export default function Auth() {
   const [tab, setTab] = useState<"login" | "register">("login");
   const [showDetails, setShowDetails] = useState(false);
   const [age, setAge] = useState<number | "">("");
+
+  const router = useRouter();
+
+  // signup state
+  const [signupName, setSignupName] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [signupDiem, setSignupDiem] = useState<number | undefined>(undefined);
+  const [signupSoGioOnline, setSignupSoGioOnline] = useState<number | undefined>(undefined);
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [signupMessage, setSignupMessage] = useState<string | null>(null);
+
+  // login state
+  const [loginId, setLoginId] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginMessage, setLoginMessage] = useState<string | null>(null);
 
   const handleNext = () => {
     if (age === "" || age < 13) {
@@ -13,6 +32,96 @@ export default function Auth() {
       return;
     }
     setShowDetails(true);
+  };
+
+  const handleRegister = async () => {
+    setSignupMessage(null);
+    if (!signupEmail || !signupPassword) {
+      setSignupMessage('Vui lòng nhập email và mật khẩu');
+      return;
+    }
+
+    setSignupLoading(true);
+    try {
+      const payload = {
+        name: signupName || undefined,
+        email: signupEmail.trim(),
+        password: signupPassword,
+        age: typeof age === 'number' ? age : undefined,
+        diem: signupDiem,
+        soGioOnline: signupSoGioOnline,
+      };
+
+      const res = await registerUser(payload as any);
+      if (res.token) {
+        localStorage.setItem('token', res.token);
+        setSignupMessage('Đăng ký thành công — bạn đã được đăng nhập');
+        setTimeout(() => router.push('/profile'), 900);
+      } else {
+        setSignupMessage(res.message || 'Đăng ký hoàn tất');
+      }
+    } catch (err: any) {
+      setSignupMessage(err?.message || 'Lỗi khi đăng ký');
+    } finally {
+      setSignupLoading(false);
+    }
+  };
+
+  const fillAndRegisterDemo = async () => {
+    // The user-provided demo data
+    const demo = {
+      HoTen: 'Nguyễn Bảo',
+      Email: 'vanbao@example.com',
+      MatKhau: 'password123',
+      Diem: 9600,
+      SoGioOnline: 5,
+    };
+
+    // prefill fields
+    setAge(20);
+    setShowDetails(true);
+    setSignupName(demo.HoTen);
+    setSignupEmail(demo.Email);
+    setSignupPassword(demo.MatKhau);
+    setSignupDiem(demo.Diem);
+    setSignupSoGioOnline(demo.SoGioOnline);
+
+    // try register and then login (if not already logged in)
+    setSignupLoading(true);
+    try {
+      await handleRegister();
+      // attempt login with same credentials
+      setLoginId(demo.Email);
+      setLoginPassword(demo.MatKhau);
+      await new Promise((r)=>setTimeout(r,300));
+      await handleLogin();
+    } finally {
+      setSignupLoading(false);
+    }
+  };
+
+  const handleLogin = async () => {
+    setLoginMessage(null);
+    if (!loginId || !loginPassword) {
+      setLoginMessage('Vui lòng nhập email và mật khẩu');
+      return;
+    }
+
+    setLoginLoading(true);
+    try {
+      const res = await loginUser(loginId.trim(), loginPassword);
+      if (res.token) {
+        localStorage.setItem('token', res.token);
+        setLoginMessage('Đăng nhập thành công');
+        setTimeout(()=>router.push('/profile'),700);
+      } else {
+        setLoginMessage(res.message || 'Đăng nhập thành công');
+      }
+    } catch (err: any) {
+      setLoginMessage(err?.message || 'Đăng nhập thất bại');
+    } finally {
+      setLoginLoading(false);
+    }
   };
 
   return (
@@ -54,6 +163,8 @@ export default function Auth() {
                 type="text"
                 className="ô_nhập"
                 placeholder="Email hoặc tên đăng nhập"
+                value={loginId}
+                onChange={(e)=>setLoginId(e.target.value)}
               />
             </div>
             <div className="nhóm_input">
@@ -61,10 +172,13 @@ export default function Auth() {
                 type="password"
                 className="ô_nhập"
                 placeholder="Mật khẩu"
+                value={loginPassword}
+                onChange={(e)=>setLoginPassword(e.target.value)}
               />
               <a href="#" className="quen-link">Quên?</a>
             </div>
-            <button className="nút_xanh">ĐĂNG NHẬP</button>
+            {loginMessage && <div className="form-message">{loginMessage}</div>}
+            <button className="nút_xanh" onClick={handleLogin} disabled={loginLoading}>{loginLoading?"Đang đăng nhập...":"ĐĂNG NHẬP"}</button>
 
             <div className="đường_kẻ">
               <span>HOẶC</span>
@@ -127,16 +241,31 @@ export default function Auth() {
             {showDetails && (
               <div id="phần_chi_tiết" className="phần_chi_tiết">
                 <h1 className="tiêu_đề">Tạo hồ sơ</h1>
+
                 <div className="nhóm_input">
-                  <input type="text" className="ô_nhập" placeholder="Tên (tùy chọn)" />
+                  <input type="text" className="ô_nhập" placeholder="Tên (tùy chọn)" value={signupName} onChange={(e)=>setSignupName(e.target.value)} />
                 </div>
                 <div className="nhóm_input">
-                  <input type="email" className="ô_nhập" placeholder="Email" />
+                  <input type="email" className="ô_nhập" placeholder="Email" value={signupEmail} onChange={(e)=>setSignupEmail(e.target.value)} />
                 </div>
                 <div className="nhóm_input">
-                  <input type="password" className="ô_nhập" placeholder="Mật khẩu" />
+                  <input type="password" className="ô_nhập" placeholder="Mật khẩu" value={signupPassword} onChange={(e)=>setSignupPassword(e.target.value)} />
                 </div>
-                <button className="nút_xanh">TẠO TÀI KHOẢN</button>
+
+                <div className="nhóm_input">
+                  <input type="number" className="ô_nhập" placeholder="Điểm (tùy chọn)" value={signupDiem ?? ''} onChange={(e)=>setSignupDiem(e.target.value === '' ? undefined : Number(e.target.value))} />
+                </div>
+                <div className="nhóm_input">
+                  <input type="number" className="ô_nhập" placeholder="Số giờ online (tùy chọn)" value={signupSoGioOnline ?? ''} onChange={(e)=>setSignupSoGioOnline(e.target.value === '' ? undefined : Number(e.target.value))} />
+                </div>
+
+                {signupMessage && <div className="form-message">{signupMessage}</div>}
+
+                <button className="nút_xanh" onClick={handleRegister} disabled={signupLoading}>
+                  {signupLoading ? "Đang tạo..." : "TẠO TÀI KHOẢN"}
+                </button>
+
+                <button className="nút_xám secondary-button" onClick={fillAndRegisterDemo} disabled={signupLoading}>Tạo & đăng nhập thử (demo)</button>
               </div>
             )}
 
@@ -325,6 +454,9 @@ export default function Auth() {
 
         .phần_chi_tiết { margin-top: 20px; }
 
+        .form-message { color: #166534; font-weight: 600; text-align:center; margin-bottom: 8px; }
+        .secondary-button { width: 100%; padding: 12px; border-radius: 10px; margin-top: 8px; background: #f3f4f6; color: #374151; border: none; cursor: pointer; }
+        .secondary-button:disabled { opacity: 0.6; pointer-events: none; }
         .chú_thích { font-size: 13px; color: #6b7280; text-align: center; margin-top: 24px; line-height: 1.6; }
         .chú_thích a { color: #58cc02; text-decoration: none; }
         .chú_thích a:hover { text-decoration: underline; }

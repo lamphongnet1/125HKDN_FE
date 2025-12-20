@@ -1,15 +1,12 @@
-import {useRef, useEffect} from 'react';
+import {useRef, useEffect,useState} from 'react';
 import { LessonNode } from './LessonNode';
+import { BaiHoc } from './type';
 
 export type NodeType = 'lesson' | 'chest' | 'trophy';
 export type NodeStatus = 'active' | 'locked';
-interface Node {
-  type: NodeType;
-  status: NodeStatus;
-}
+
 
 interface LessonPathProps {
-  nodes: Node[];
   pathId: number;
   onLessonClick?: () => void;
   label?: string;
@@ -18,7 +15,6 @@ interface LessonPathProps {
 }
 
 export const LessonPath: React.FC<LessonPathProps> = ({
-  nodes,
   pathId,
   onLessonClick,
   label = 'Order drinks',
@@ -26,7 +22,18 @@ export const LessonPath: React.FC<LessonPathProps> = ({
   color,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const [baihoc, setBaihoc] = useState<BaiHoc[] | null>(null);
 
+  useEffect(() => {
+            fetch("http://127.0.0.1:8000/api/chuong/1/baihoc")
+              .then(res => res.json())
+              .then(res => {
+                if (res.success) {
+                  setBaihoc(res.data);
+                }
+              })
+              .catch(err => console.error(err));
+          }, []);
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -76,7 +83,9 @@ export const LessonPath: React.FC<LessonPathProps> = ({
   };
 
   const positions = pathPositions[pathId] || pathPositions[1];
-
+if(!baihoc){
+    return <div className="p-10">Đang tải dữ liệu...</div>;
+  }
   return (
     <div ref={ref}>
       {pathId !== 1 && (
@@ -92,16 +101,23 @@ export const LessonPath: React.FC<LessonPathProps> = ({
         </div>
       )}
       <div className="relative w-full h-[450px]">
-        {nodes.map((node, index) => (
-          <LessonNode
-            key={index}
-            type={node.type}
-            status={node.status}
-            position={positions[index]}
-            onClick={index === 0 && onLessonClick ? onLessonClick : undefined}
-            color={color}
-          />
-        ))}
+        {baihoc.map((baihoccon, index) => {
+
+          return (
+            <LessonNode
+              key={index}
+              type="lesson"
+              status="active"
+              position={positions[index]}
+              lessonTitle={baihoccon.TenBaiHoc}
+              onClick={index === 0 && onLessonClick ? onLessonClick : undefined}
+              color={color}
+              lessonNumber={baihoccon.ThuTu}
+            />
+          );
+        })}
+
+
       </div>
 
       
