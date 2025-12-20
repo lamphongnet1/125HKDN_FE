@@ -13,7 +13,7 @@ export default function Profile() {
   const [user, setUser] = useState<User | null>(null);
   const [rank, setRank] = useState<number | null>(null);
 
-  const userID = 2;
+  const userID = localStorage.getItem('ID_User');
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/users/" + userID)
       .then(res => res.json())
