@@ -1,3 +1,6 @@
+"use client"
+import { useEffect, useState } from 'react';
+
 export default function Leaderboard() {
   const leagues = [
     { color: 'bg-purple-400', gem: '💎' },
@@ -6,52 +9,28 @@ export default function Leaderboard() {
     { color: 'bg-cyan-300', gem: '🔑' }
   ];
 
-  const leaderboardData = [
-    {
-      rank: 1,
-      avatar: '👨',
-      name: 'GhostjZunn',
-      verified: true,
-      superBadge: true,
-      score: '10001 Điểm',
-      highlight: true
-    },
-    {
-      rank: 2,
-      avatar: '😎',
-      name: 'Lê Trâm Anh Hoàng',
-      badge: '🍿',
-      score: '3828 Điểm'
-    },
-    {
-      rank: 3,
-      avatar: '🐵',
-      name: 'Sena セナ',
-      superBadge: true,
-      score: '3804 Điểm'
-    },
-    {
-      rank: 4,
-      avatar: '👨‍💼',
-      name: 'yuduki',
-      subtitle: '🔥 hơn 1 năm',
-      score: '3559 Điểm'
-    },
-    {
-      rank: 5,
-      avatar: '😎',
-      name: 'Đậu',
-      badge: '🎉',
-      score: '3478 Điểm'
-    },
-    {
-      rank: 6,
-      avatar: '🦍',
-      name: 'Thành Lâm HR',
-      superBadge: true,
-      score: '3320 Điểm'
-    }
-  ];
+  interface UserScore {
+    ID_User: number;
+    HoTen: string;
+    Email: string;
+    Diem: number;
+  }
+
+  const [leaderboardData, setLeaderboardData] = useState<UserScore[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/users/top-score')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json && json.data) {
+          setLeaderboardData(json.data);
+        }
+      })
+      .catch((err) => console.error('Failed to fetch leaderboard:', err))
+      .finally(() => setLoading(false));
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-white p-6 relative z-0">
@@ -71,46 +50,51 @@ export default function Leaderboard() {
 
           {/* Leaderboard List */}
           <div className="divide-y divide-gray-100">
-            {leaderboardData.map((user, idx) => (
-              <div
-                key={idx}
-                className={`flex items-center justify-between px-6 py-4 transition-colors ${
-                  user.highlight ? 'bg-blue-50' : 'hover:bg-gray-50'
-                }`}
-              >
-                <div className="flex items-center gap-4">
-                  {/* Rank Badge */}
-                  <div className={`w-12 h-12 flex items-center justify-center rounded-full text-white font-black text-lg flex-shrink-0 ${
-                    user.rank === 1 ? 'bg-yellow-400' :
-                    user.rank === 2 ? 'bg-gray-400' :
-                    user.rank === 3 ? 'bg-orange-400' :
-                    'bg-transparent text-gray-700'
-                  }`}>
-                    {user.rank <= 3 ? user.rank : <span className="text-gray-600 font-bold">{user.rank}</span>}
-                  </div>
+            {loading ? (
+              <div className="text-center py-8 text-gray-500">Loading...</div>
+            ) : (
+              leaderboardData.map((user, idx) => {
+                const rank = idx + 1;
+                const avatar = '👤'; // placeholder avatar
+                return (
+                  <div
+                    key={user.ID_User}
+                    className={`flex items-center justify-between px-6 py-4 transition-colors ${idx % 2 === 0 ? 'bg-gray-50' : 'hover:bg-gray-100'}`}
+                  >
+                    <div className="flex items-center gap-4">
+                      {/* Rank Badge */}
+                      <div
+                        className={`w-12 h-12 flex items-center justify-center rounded-full text-white font-black text-lg flex-shrink-0 ${rank === 1 ? 'bg-yellow-400' :
+                          rank === 2 ? 'bg-gray-400' :
+                            rank === 3 ? 'bg-orange-400' :
+                              'bg-transparent text-gray-700'}`}
+                      >
+                        {rank <= 3 ? rank : <span className="text-gray-600 font-bold">{rank}</span>}
+                      </div>
 
-                  {/* Avatar with Badge */}
-                  <div className="relative">
-                    <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center text-2xl border-4 border-white shadow-md">
-                      {user.avatar}
+                      {/* Avatar with Badge */}
+                      <div className="relative">
+                        <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full flex items-center justify-center text-2xl border-4 border-white shadow-md">
+                          {avatar}
+                        </div>
+                      </div>
+
+                      {/* User Info */}
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-gray-800 text-base">{user.HoTen}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Score */}
+                    <div className="text-gray-700 font-bold text-lg">
+                      {user.Diem} Điểm
                     </div>
                   </div>
-
-                  {/* User Info */}
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-gray-800 text-base">{user.name}</span>
-                    </div>
-
-                  </div>
-                </div>
-
-                {/* Score */}
-                <div className="text-gray-700 font-bold text-lg">
-                  {user.score}
-                </div>
-              </div>
-            ))}
+                );
+              })
+            )}
           </div>
         </div>
 
