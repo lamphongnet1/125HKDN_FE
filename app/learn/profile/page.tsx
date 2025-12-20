@@ -30,7 +30,9 @@ export default function Profile() {
       .then(res => res.json())
       .then(json => {
         if (json && json.data) {
-          const entry = json.data.find((item: any) => item.ID_User === userID);
+          // Convert userID to number for comparison
+          const userId = userID ? parseInt(userID, 10) : null;
+          const entry = json.data.find((item: any) => item.ID_User === userId);
           if (entry) {
             setRank(entry.stt);
           } else {
