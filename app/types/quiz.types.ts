@@ -20,7 +20,6 @@ export interface QuizPageLayoutProps {
   showResult: boolean;
   isCorrect: boolean;
   DapAnDung?: string;
-  meaning?: string;
   children: React.ReactNode;
   onSkip: () => void;
   onCheck: () => void;
@@ -53,7 +52,8 @@ export interface FillBlankProps {
   ManhGhepB: string;
   ManhGhepC: string;
   ManhGhepD: string;
-  onAnswerChange: (answer: string) => void;
+  selectedAnswer: string | null;
+  onSelectAnswer: (answer: string) => void;
 }
 
 export interface CompleteSentenceProps {
