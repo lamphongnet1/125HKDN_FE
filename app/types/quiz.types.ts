@@ -1,12 +1,13 @@
 export interface QuizQuestion {
-  id: string;
-  type:
-    | 'multiple-choice'
-    | 'listening'
-    | 'fill-blank'
-    | 'complete-sentence'
-    | 'image-choice'
-    | 'video-choice';
+  ID_Cau: number;
+  ThuTu: number;
+  LoaiCauHoi:
+    | 'nghehoithoai'
+    | 'nghexepcau'
+    | 'dientu'
+    | 'tracnghiem'
+    | 'chonanh'
+    | 'video';
   data: any;
 }
 
@@ -18,7 +19,7 @@ export interface QuizPageLayoutProps {
   canCheck: boolean;
   showResult: boolean;
   isCorrect: boolean;
-  correctAnswer?: string;
+  DapAnDung?: string;
   meaning?: string;
   children: React.ReactNode;
   onSkip: () => void;
@@ -27,57 +28,63 @@ export interface QuizPageLayoutProps {
 }
 
 export interface MultipleChoiceProps {
-  label?: string;
-  question: string;
-  options: string[];
+  CauHoi: string;
+  DapAnA: string;
+  DapAnB: string;
+  DapAnC: string;
+  DapAnD: string;
   selectedAnswer: string | null;
   onSelectAnswer: (answer: string) => void;
 }
 
 export interface ListeningQuizProps {
-  question: string;
-  options: string[];
-  audioUrl?: string;
+  CauHoi: string;
+  DapAnA: string;
+  DapAnB: string;
+  DuongDanAudio?: string;
   selectedAnswer: string | null;
   onSelectAnswer: (answer: string) => void;
 }
 
 export interface FillBlankProps {
-  question: string;
-  placeholder?: string;
-  answer: string;
+  CauHoi: string;
+  CauMau: string;
+  ManhGhepA: string;
+  ManhGhepB: string;
+  ManhGhepC: string;
+  ManhGhepD: string;
   onAnswerChange: (answer: string) => void;
 }
 
 export interface CompleteSentenceProps {
-  sentence: string;
-  translation: string;
-  words: string[];
+  DuongDanAudio: string;
+  ManhGhepA: string;
+  ManhGhepB: string;
+  ManhGhepC: string;
+  ManhGhepD: string;
   selectedWords: string[];
   onSelectWord: (word: string) => void;
   onRemoveWord: (index: number) => void;
 }
 
-export interface ImageOption {
-  value: string;
-  label: string;
-  imageUrl: string;
-  number?: number | string;
-}
 
 export interface ImageChoiceProps {
-  label?: string;
-  question: string;
-  options: ImageOption[];
+  CauHoi: string;
+  DuongDanA: string;
+  DuongDanB: string;
+  DuongDanC: string;
+  DuongDanD: string;
   selectedAnswer: string | null;
   onSelectAnswer: (answer: string) => void;
 }
 
 export interface VideoChoiceProps {
-  label?: string;
-  question: string;
-  videoUrl: string;
-  options: string[];
+  CauHoi: string;
+  DuongDanVideo: string;
+  DapAnA: string;
+  DapAnB: string;
+  DapAnC: string;
+  DapAnD: string;
   selectedAnswer: string | null;
   onSelectAnswer: (answer: string) => void;
 }

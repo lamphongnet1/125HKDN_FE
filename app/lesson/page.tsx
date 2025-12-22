@@ -1,8 +1,8 @@
 // app/quiz/page.tsx
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import MultipleChoiceQuiz from './QuizComponents/MultipleChoiceQuiz';
 import ListeningQuiz from './QuizComponents/ListeningQuiz';
 import FillBlankQuiz from './QuizComponents/FillBlankQuiz';
@@ -12,6 +12,8 @@ import VideoChoiceQuiz from './QuizComponents/VideoChoiceQuiz';
 import { QuizQuestion } from '../types/quiz.types';
 
 export default function QuizPage() {
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [loading, setLoading] = useState(true);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [lives, setLives] = useState(5);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -20,138 +22,101 @@ export default function QuizPage() {
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const router = useRouter();
-  const questions: QuizQuestion[] = [
-    {
-      id: '1',
-      type: 'multiple-choice',
-      data: {
-        label: 'CHỌN ĐÁP ÁN ĐÚNG',
-        question: 'Đâu là "NƯỚC"?',
-        options: ['みず', 'おちゃ', 'ください'],
-        correctAnswer: 'みず',
-        meaning: 'Nước'
+  const searchParams = useSearchParams();
+  const baiHocId = searchParams.get('baihoc') || searchParams.get('id');
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        setLoading(true);
+        // Fetch từ API - endpoint: /api/baihoc/{id}/cauhoichitiet
+        const id = baiHocId || '1'; // Tạm thời dùng 1 để test, sau này sẽ lấy từ URL params
+        const url = `http://127.0.0.1:8000/api/baihoc/${id}/cauhoichitiet`;
+        
+        const response = await fetch(url);
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+          setQuestions(result.data);
+        } else {
+          console.error('Failed to fetch questions:', result);
+        }
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      } finally {
+        setLoading(false);
       }
-    },
-    {
-      id: '2',
-      type: 'listening',
-      data: {
-        question: 'Nghe và chọn đáp án',
-        options: ['みず', 'すし', 'ごはん', 'ください', 'おちゃ'],
-        correctAnswer: 'ごはん',
-        meaning: 'Cơm',
-        audioUrl: undefined
-      }
-    },
-    {
-      id: '3',
-      type: 'fill-blank',
-      data: {
-        question: 'Từ tiếng Nhật có nghĩa là "Cảm ơn" là gì?',
-        correctAnswer: 'ありがとう',
-        meaning: 'Cảm ơn'
-      }
-    },
-    {
-      id: '4',
-      type: 'complete-sentence',
-      data: {
-        sentence: 'みず と ごはん を ください',
-        translation: 'Hãy cho tôi nước và cơm',
-        words: ['みず', 'と', 'ごはん', 'を', 'ください'],
-        correctAnswer: ['みず', 'と', 'ごはん', 'を', 'ください'],
-        meaning: 'Hãy cho tôi nước và cơm'
-      }
-    },
-    {
-      id: '5',
-      type: 'image-choice',
-      data: {
-        label: 'TỪ VỰNG MỚI',
-        question: 'Đâu là "cơm"?',
-        options: [
-          {
-            value: 'ごはん',
-            label: 'ごはん',
-            imageUrl:
-              'https://media.istockphoto.com/id/1748480431/vi/vec-to/c%C6%A1m-n%E1%BA%A5u-trong-m%E1%BB%99t-c%C3%A1i-b%C3%A1t-b%E1%BB%8B-c%C3%B4-l%E1%BA%ADp-tr%C3%AAn-n%E1%BB%81n-tr%E1%BA%AFng.jpg?s=612x612&w=0&k=20&c=c2cGCbofrjy51HA-xNWywogq2AM_TUKE7VztLpTs2fw=',
-            number: 1
-          },
-          {
-            value: 'おちゃ',
-            label: 'おちゃ',
-            imageUrl:
-              'https://i.pinimg.com/736x/61/6f/af/616faf6bf1b054071243f5690f98d89e.jpg',
-            number: 2
-          },
-          {
-            value: 'みず',
-            label: 'みず',
-            imageUrl:
-              'https://tse4.mm.bing.net/th/id/OIP.kTzTuzO_iuwF0nMUY8lskQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3',
-            number: 3
-          }
-        ],
-        correctAnswer: 'ごはん',
-        meaning: 'Cơm'
-      }
-    },
-    {
-      id: '6',
-      type: 'video-choice',
-      data: {
-        label: 'CÂU NÓI CHỦ ĐỀ',
-        question: 'Xin cho tôi trà',
-        videoUrl: 'https://cdn.pixabay.com/video/2024/05/06/210926_large.mp4',
-        options: ['みず ください', 'ごはん ください', 'おちゃ ください'],
-        correctAnswer: 'おちゃ ください',
-        meaning: 'Xin cho tôi trà'
-      }
-    }
-  ];
+    };
+
+    fetchQuestions();
+  }, [baiHocId]);
+
+  if (loading) {
+    return (
+      <div className="max-w-3xl mx-auto p-5 bg-white rounded-xl">
+        <div className="text-center py-10">Đang tải dữ liệu...</div>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="max-w-3xl mx-auto p-5 bg-white rounded-xl">
+        <div className="text-center py-10">Không có câu hỏi nào.</div>
+      </div>
+    );
+  }
 
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
-  const correctAnswerText = Array.isArray(currentQuestion.data.correctAnswer)
-    ? currentQuestion.data.correctAnswer.join(' ')
-    : currentQuestion.data.correctAnswer;
+  // Lấy đáp án đúng từ DapAnDung
+  const correctAnswerText = currentQuestion.data.DapAnDung || '';
 
-  const meaningText = currentQuestion.data.meaning;
+  const meaningText = currentQuestion.data.meaning || '';
 
   const canCheck = () => {
+    if (!currentQuestion) return false;
+    
     if (
-      currentQuestion.type === 'multiple-choice' ||
-      currentQuestion.type === 'listening' ||
-      currentQuestion.type === 'image-choice' ||
-      currentQuestion.type === 'video-choice'
+      currentQuestion.LoaiCauHoi === 'tracnghiem' ||
+      currentQuestion.LoaiCauHoi === 'nghehoithoai' ||
+      currentQuestion.LoaiCauHoi === 'chonanh' ||
+      currentQuestion.LoaiCauHoi === 'video'
     ) {
       return selectedAnswer !== null;
-    } else if (currentQuestion.type === 'fill-blank') {
+    } else if (currentQuestion.LoaiCauHoi === 'dientu') {
       return fillBlankAnswer.trim() !== '';
-    } else if (currentQuestion.type === 'complete-sentence') {
+    } else if (currentQuestion.LoaiCauHoi === 'nghexepcau') {
       return selectedWords.length > 0;
     }
     return false;
   };
 
   const handleCheck = () => {
+    if (!currentQuestion) return;
+    
     let correct = false;
+    const correctAnswer = currentQuestion.data.DapAnDung;
 
-    if (
-      currentQuestion.type === 'multiple-choice' ||
-      currentQuestion.type === 'listening' ||
-      currentQuestion.type === 'image-choice' ||
-      currentQuestion.type === 'video-choice'
-    ) {
-      correct = selectedAnswer === currentQuestion.data.correctAnswer;
-    } else if (currentQuestion.type === 'fill-blank') {
-      correct = fillBlankAnswer.trim().toLowerCase() === currentQuestion.data.correctAnswer.toLowerCase();
-    } else if (currentQuestion.type === 'complete-sentence') {
-      const correctWords = Array.isArray(currentQuestion.data.correctAnswer)
-        ? currentQuestion.data.correctAnswer
-        : [currentQuestion.data.correctAnswer];
-
+    if (currentQuestion.LoaiCauHoi === 'tracnghiem') {
+      // tracnghiem: selectedAnswer là text của đáp án (DapAnA, DapAnB, etc.), DapAnDung cũng là text
+      correct = selectedAnswer === correctAnswer;
+    } else if (currentQuestion.LoaiCauHoi === 'nghehoithoai') {
+      // nghehoithoai: selectedAnswer là text của đáp án (DapAnA, DapAnB), DapAnDung cũng là text
+      correct = selectedAnswer === correctAnswer;
+    } else if (currentQuestion.LoaiCauHoi === 'chonanh') {
+      // chonanh: selectedAnswer là 'A', 'B', 'C', 'D' (value), DapAnDung cũng là 'A', 'B', 'C', 'D'
+      correct = selectedAnswer === correctAnswer;
+    } else if (currentQuestion.LoaiCauHoi === 'video') {
+      // video: selectedAnswer là text của đáp án (DapAnA, DapAnB, etc.), DapAnDung cũng là text
+      correct = selectedAnswer === correctAnswer;
+    } else if (currentQuestion.LoaiCauHoi === 'dientu') {
+      // dientu: fillBlankAnswer là text người dùng chọn từ ManhGhep, DapAnDung là text đúng
+      correct = fillBlankAnswer.trim().toLowerCase() === (correctAnswer || '').toLowerCase();
+    } else if (currentQuestion.LoaiCauHoi === 'nghexepcau') {
+      // nghexepcau: Parse DapAnDung thành array để so sánh với selectedWords
+      const correctWords = correctAnswer ? correctAnswer.split(' ').filter((w: string) => w.trim() !== '') : [];
       correct = JSON.stringify(selectedWords) === JSON.stringify(correctWords);
     }
 
@@ -182,68 +147,84 @@ export default function QuizPage() {
   const handleSkip = () => handleContinue();
 
   const renderQuizContent = () => {
-    switch (currentQuestion.type) {
-      case 'multiple-choice':
+    if (!currentQuestion) return null;
+
+    switch (currentQuestion.LoaiCauHoi) {
+      case 'tracnghiem':
         return (
           <MultipleChoiceQuiz
-            label={currentQuestion.data.label}
-            question={currentQuestion.data.question}
-            options={currentQuestion.data.options}
+            CauHoi={currentQuestion.data.CauHoi}
+            DapAnA={currentQuestion.data.DapAnA}
+            DapAnB={currentQuestion.data.DapAnB}
+            DapAnC={currentQuestion.data.DapAnC}
+            DapAnD={currentQuestion.data.DapAnD}
             selectedAnswer={selectedAnswer}
             onSelectAnswer={setSelectedAnswer}
           />
         );
 
-      case 'listening':
+      case 'nghehoithoai':
         return (
           <ListeningQuiz
-            question={currentQuestion.data.question}
-            options={currentQuestion.data.options}
-            audioUrl={currentQuestion.data.audioUrl}
+            CauHoi={currentQuestion.data.CauHoi}
+            DapAnA={currentQuestion.data.DapAnA}
+            DapAnB={currentQuestion.data.DapAnB}
+            DuongDanAudio={currentQuestion.data.DuongDanAudio}
             selectedAnswer={selectedAnswer}
             onSelectAnswer={setSelectedAnswer}
           />
         );
 
-      case 'fill-blank':
+      case 'dientu':
         return (
           <FillBlankQuiz
-            question={currentQuestion.data.question}
-            answer={fillBlankAnswer}
+            CauHoi={currentQuestion.data.CauHoi}
+            CauMau={currentQuestion.data.CauMau}
+            ManhGhepA={currentQuestion.data.ManhGhepA}
+            ManhGhepB={currentQuestion.data.ManhGhepB}
+            ManhGhepC={currentQuestion.data.ManhGhepC}
+            ManhGhepD={currentQuestion.data.ManhGhepD}            
             onAnswerChange={setFillBlankAnswer}
           />
         );
 
-      case 'complete-sentence':
+      case 'nghexepcau':
         return (
           <CompleteSentenceQuiz
-            sentence={currentQuestion.data.sentence}
-            translation={currentQuestion.data.translation}
-            words={currentQuestion.data.words}
+            DuongDanAudio={currentQuestion.data.DuongDanAudio}
+            ManhGhepA={currentQuestion.data.ManhGhepA}
+            ManhGhepB={currentQuestion.data.ManhGhepB}
+            ManhGhepC={currentQuestion.data.ManhGhepC}
+            ManhGhepD={currentQuestion.data.ManhGhepD}
             selectedWords={selectedWords}
             onSelectWord={(word) => setSelectedWords([...selectedWords, word])}
             onRemoveWord={(index) => setSelectedWords(selectedWords.filter((_, i) => i !== index))}
           />
         );
 
-      case 'image-choice':
+      case 'chonanh':
         return (
           <ImageChoiceQuiz
-            label={currentQuestion.data.label}
-            question={currentQuestion.data.question}
-            options={currentQuestion.data.options}
+            CauHoi={currentQuestion.data.CauHoi}
+            DuongDanA={currentQuestion.data.DuongDanA}
+            DuongDanB={currentQuestion.data.DuongDanB}
+            DuongDanC={currentQuestion.data.DuongDanC}
+            DuongDanD={currentQuestion.data.DuongDanD}
             selectedAnswer={selectedAnswer}
             onSelectAnswer={setSelectedAnswer}
           />
         );
 
-      case 'video-choice':
+      case 'video':
+     
         return (
           <VideoChoiceQuiz
-            label={currentQuestion.data.label}
-            question={currentQuestion.data.question}
-            videoUrl={currentQuestion.data.videoUrl}
-            options={currentQuestion.data.options}
+            CauHoi={currentQuestion.data.CauHoi}
+            DuongDanVideo={currentQuestion.data.DuongDanVideo}
+            DapAnA={currentQuestion.data.DapAnA}
+            DapAnB={currentQuestion.data.DapAnB}
+            DapAnC={currentQuestion.data.DapAnC}
+            DapAnD={currentQuestion.data.DapAnD}
             selectedAnswer={selectedAnswer}
             onSelectAnswer={setSelectedAnswer}
           />
