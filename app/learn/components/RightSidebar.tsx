@@ -14,17 +14,16 @@ interface User {
 export const RightSidebar = () => {
   const [user, setUser] = useState<User | null>(null);
 
+  const userID = localStorage.getItem('ID_User');
   useEffect(() => {
-    // Lấy dữ liệu user từ localStorage
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      try {
-        const userData = JSON.parse(userStr);
-        setUser(userData);
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-      }
-    }
+    fetch("http://127.0.0.1:8000/api/users/" + userID)
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          setUser(res.data);
+        }
+      })
+      .catch(err => console.error(err));
   }, []);
 
   // Lấy chữ cái đầu của tên để hiển thị avatar
