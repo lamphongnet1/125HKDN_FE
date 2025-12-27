@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { LessonPath } from './components/LessonPath';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { LessonPath, CurrentLesson } from './components/LessonPath';
 import { Modal } from './components/Modal';
 import { Header } from './components/Header';
 
@@ -19,33 +19,74 @@ type BaiHoc = {
   ThuTu: number;
 };
 
+// Default nodes array - moved outside component to avoid recreation
+const DEFAULT_NODES = [
+  { type: 'lesson' as const, status: 'locked' as const },
+  { type: 'lesson' as const, status: 'locked' as const },
+  { type: 'lesson' as const, status: 'locked' as const },
+  { type: 'lesson' as const, status: 'locked' as const },
+  { type: 'lesson' as const, status: 'locked' as const },
+];
+
 export default function Page() {
   const [chuong, setChuong] = useState<Chuong[] | null>(null);
   const [baiHocMap, setBaiHocMap] = useState<Record<number, BaiHoc[]>>({});
+  const [currentLesson, setCurrentLesson] = useState<CurrentLesson | null>(null);
+  const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/chuong")
-      .then(res => res.json())
-      .then(res => {
-        if (res.success) {
-          setChuong(res.data);
-          // Fetch bài học cho mỗi chương
-          res.data.forEach((ch: Chuong) => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const userID = localStorage.getItem('ID_User');
+
+        // Fetch chương và current lesson song song
+        const [chuongRes, currentLessonRes] = await Promise.all([
+          fetch("http://127.0.0.1:8000/api/chuong").then(res => res.json()),
+          userID 
+            ? fetch(`http://127.0.0.1:8000/api/user/${userID}/baihoc/dang-hoc`)
+                .then(res => res.json())
+                .then(res => res.data ? res : { data: null })
+                .catch(() => ({ data: null }))
+            : Promise.resolve({ data: null })
+        ]);
+
+        if (chuongRes.success) {
+          setChuong(chuongRes.data);
+          
+          // Fetch tất cả bài học song song
+          const baiHocPromises = chuongRes.data.map((ch: Chuong) =>
             fetch(`http://127.0.0.1:8000/api/chuong/${ch.ID_Chuong}/baihoc`)
               .then(res => res.json())
-              .then(res => {
-                if (res.success) {
-                  setBaiHocMap(prev => ({
-                    ...prev,
-                    [ch.ID_Chuong]: res.data
-                  }));
-                }
+              .then(res => res.success ? { chuongId: ch.ID_Chuong, data: res.data } : null)
+              .catch(err => {
+                console.error(`Error fetching baihoc for chuong ${ch.ID_Chuong}:`, err);
+                return null;
               })
-              .catch(err => console.error(err));
+          );
+
+          const baiHocResults = await Promise.all(baiHocPromises);
+          const newBaiHocMap: Record<number, BaiHoc[]> = {};
+          baiHocResults.forEach(result => {
+            if (result) {
+              newBaiHocMap[result.chuongId] = result.data;
+            }
           });
+          setBaiHocMap(newBaiHocMap);
         }
-      })
-      .catch(err => console.error(err));
+
+        // Set current lesson
+        if (currentLessonRes.data) {
+          setCurrentLesson(currentLessonRes.data);
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,17 +95,18 @@ export default function Page() {
     title: 'Order food 2',
     color: 'blue-400'
   });
-  const colors = ['blue-400', 'purple-400', 'yellow-400','green-400','orange-400'];
+  
+  const colors = useMemo(() => ['blue-400', 'purple-400', 'yellow-400','green-400','orange-400'], []);
 
-  const handleLessonPathInView = (label: string, pathId: number, color: string) => {
+  const handleLessonPathInView = useCallback((label: string, pathId: number, color: string) => {
     setHeaderData({
       unit: `Chương ${pathId}`,
       title: label,
       color: color,
     });
-  };
+  }, []);
 
-  if (!chuong) {
+  if (loading || !chuong) {
     return <div className="p-10">Đang tải dữ liệu...</div>;
   }
 
@@ -86,18 +128,13 @@ export default function Page() {
           return (
             <LessonPath 
               key={chuongcon.ID_Chuong}
-              nodes={[
-                { type: 'lesson', status: 'active' },
-                { type: 'lesson', status: 'locked' },
-                { type: 'chest', status: 'locked' },
-                { type: 'lesson', status: 'locked' },
-                { type: 'trophy', status: 'locked' },
-              ]}
+              nodes={DEFAULT_NODES}
               pathId={chuongcon.ThuTu}
               label={chuongcon.TenChuong}
               onInView={handleLessonPathInView}
-              color={colors[chuongcon.ThuTu - 1]}
+              color={colors[chuongcon.ThuTu - 1] || colors[0]}
               baiHocList={baiHocList}
+              currentLesson={currentLesson}
             />
           );
         })}

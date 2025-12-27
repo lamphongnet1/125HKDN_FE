@@ -68,9 +68,22 @@ import { QuizQuestion } from '../types/quiz.types';
         </div>
       );
     }
-
-    const handleNextLesson = () => {
-      // Điều hướng đến bài học tiếp theo hoặc trang learn
+    const AddPoints = async (totalPoints: number, userId: string) => {
+      try {
+        await fetch(`http://127.0.0.1:8000/api/users/${totalPoints}/${userId}`, {
+          method: 'PUT'
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+    
+    const handleNextLesson = async () => {
+      const userInfo = localStorage.getItem("user");
+      if (userInfo) {
+        const user = JSON.parse(userInfo);
+        await AddPoints(totalPoints, user.ID_User);
+      }
       router.push('/learn');
     };
 

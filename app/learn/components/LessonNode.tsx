@@ -1,7 +1,6 @@
   import React, { useState,useRef,useEffect } from 'react';
   import { Star, Package, Award, X } from 'lucide-react';
   import { useRouter } from 'next/navigation';
-  import { BaiHoc } from './type';
 
   interface LessonNodeProps {
     type: 'lesson' | 'chest' | 'trophy';
@@ -53,24 +52,12 @@
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [showModal, setShowModal] = useState(false);
     const [modalPos, setModalPos] = useState({ top: 0, left: 0 });
-    const [baihoc, setBaihoc] = useState<BaiHoc[] | null>(null);
     const router = useRouter();
     const openModal = () => {
       setShowModal(true);
     };
 
-      
-        useEffect(() => {
-          fetch("http://127.0.0.1:8000/api/chuong")
-            .then(res => res.json())
-            .then(res => {
-              if (res.success) {
-                setBaihoc(res.data);
-              }
-            })
-            .catch(err => console.error(err));
-        }, []);
-useEffect(() => {
+    useEffect(() => {
   if (showModal && buttonRef.current) {
     const rect = buttonRef.current.getBoundingClientRect();
 
@@ -181,7 +168,7 @@ const getColors = () => {
     };
 
     const handleStartLesson = () => {
-      router.push('/lesson');
+      router.push('/lesson/{id}');
         
         // Tùy chọn: Đóng modal sau khi bắt đầu chuyển hướng
         setShowModal(false);
