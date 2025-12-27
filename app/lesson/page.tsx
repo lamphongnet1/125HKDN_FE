@@ -3,13 +3,14 @@
 
   import { useState, useEffect } from 'react';
   import { useRouter, useSearchParams } from 'next/navigation';
-  import MultipleChoiceQuiz from './QuizComponents/MultipleChoiceQuiz';
-  import ListeningQuiz from './QuizComponents/ListeningQuiz';
-  import FillBlankQuiz from './QuizComponents/FillBlankQuiz';
-  import CompleteSentenceQuiz from './QuizComponents/CompleteSentenceQuiz';
-  import ImageChoiceQuiz from './QuizComponents/ImageChoiceQuiz';
-  import VideoChoiceQuiz from './QuizComponents/VideoChoiceQuiz';
-  import { QuizQuestion } from '../types/quiz.types';
+import MultipleChoiceQuiz from './QuizComponents/MultipleChoiceQuiz';
+import ListeningQuiz from './QuizComponents/ListeningQuiz';
+import FillBlankQuiz from './QuizComponents/FillBlankQuiz';
+import CompleteSentenceQuiz from './QuizComponents/CompleteSentenceQuiz';
+import ImageChoiceQuiz from './QuizComponents/ImageChoiceQuiz';
+import VideoChoiceQuiz from './QuizComponents/VideoChoiceQuiz';
+import Summary from './QuizComponents/Summary';
+import { QuizQuestion } from '../types/quiz.types';
 
   export default function QuizPage() {
     const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -20,6 +21,8 @@
     const [selectedWords, setSelectedWords] = useState<string[]>([]);
     const [showResult, setShowResult] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
+    const [totalPoints, setTotalPoints] = useState(0);
+    const [showSummary, setShowSummary] = useState(false);
     const router = useRouter();
     const searchParams = useSearchParams();
     const baiHocId = searchParams.get('baihoc') || searchParams.get('id');
@@ -63,6 +66,35 @@
         <div className="max-w-3xl mx-auto p-5 bg-white rounded-xl">
           <div className="text-center py-10">Không có câu hỏi nào.</div>
         </div>
+      );
+    }
+
+    const handleNextLesson = () => {
+      // Điều hướng đến bài học tiếp theo hoặc trang learn
+      router.push('/learn');
+    };
+
+    const handleRetry = () => {
+      // Reset tất cả để làm lại bài học
+      setCurrentQuestionIndex(0);
+      setTotalPoints(0);
+      setShowSummary(false);
+      setSelectedAnswer(null);
+      setFillBlankAnswer('');
+      setSelectedWords([]);
+      setShowResult(false);
+      setIsCorrect(false);
+    };
+
+    // Hiển thị trang tổng kết nếu đã hoàn thành tất cả câu hỏi
+    if (showSummary) {
+      return (
+        <Summary
+          totalPoints={totalPoints}
+          totalQuestions={questions.length}
+          onNextLesson={handleNextLesson}
+          onRetry={handleRetry}
+        />
       );
     }
 
@@ -125,22 +157,24 @@
       setIsCorrect(correct);
       setShowResult(true);
 
-
+      // Cộng điểm nếu trả lời đúng (10 điểm mỗi câu đúng)
+      if (correct) {
+        setTotalPoints(prev => prev + 10);
+      }
     };
 
     const handleContinue = () => {
       if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
+        setSelectedAnswer(null);
+        setFillBlankAnswer('');
+        setSelectedWords([]);
+        setShowResult(false);
+        setIsCorrect(false);
       } else {
-        router.push('/learn');
-        setCurrentQuestionIndex(0);
+        // Hiển thị trang tổng kết khi hoàn thành tất cả câu hỏi
+        setShowSummary(true);
       }
-
-      setSelectedAnswer(null);
-      setFillBlankAnswer('');
-      setSelectedWords([]);
-      setShowResult(false);
-      setIsCorrect(false);
     };
 
     const handleSkip = () => handleContinue();
