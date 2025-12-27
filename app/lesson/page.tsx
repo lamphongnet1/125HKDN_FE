@@ -111,8 +111,15 @@
         correct = selectedAnswer === correctAnswer;
       } else if (currentQuestion.LoaiCauHoi === 'nghexepcau') {
         // nghexepcau: Parse DapAnDung thành array để so sánh với selectedWords
-        const correctWords = correctAnswer ? correctAnswer.split(' ').filter((w: string) => w.trim() !== '') : [];
-        correct = JSON.stringify(selectedWords) === JSON.stringify(correctWords);
+        const correctWords = correctAnswer 
+        ? correctAnswer.replace(/[\s\u3000。、]/g, '').toLowerCase() 
+        : '';
+      const selectedString = selectedWords
+        .join('')
+        .replace(/[\s\u3000。、]/g, '')
+        .toLowerCase();
+      
+      correct = selectedString === correctWords;
       }
 
       setIsCorrect(correct);
