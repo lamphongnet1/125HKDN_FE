@@ -1,23 +1,59 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ImageChoiceProps } from '../../types/quiz.types';
 
 export default function ImageChoiceQuiz({
-  label,
-  question,
-  options,
+  CauHoi,
+  DuongDanA,
+  DuongDanB,
+  DuongDanC,
+  DuongDanD,
   selectedAnswer,
   onSelectAnswer,
 }: ImageChoiceProps) {
+  // Tạo mảng options từ các props DuongDan
+  const options = useMemo(() => {
+    const optionList = [];
+    if (DuongDanA) {
+      optionList.push({
+        value: 'A',
+        imageUrl: DuongDanA,
+        label: 'A',
+      });
+    }
+    if (DuongDanB) {
+      optionList.push({
+        value: 'B',
+        imageUrl: DuongDanB,
+        label: 'B',
+      });
+    }
+    if (DuongDanC) {
+      optionList.push({
+        value: 'C',
+        imageUrl: DuongDanC,
+        label: 'C',
+      });
+    }
+    if (DuongDanD) {
+      optionList.push({
+        value: 'D',
+        imageUrl: DuongDanD,
+        label: 'D',
+      });
+    }
+    return optionList;
+  }, [DuongDanA, DuongDanB, DuongDanC, DuongDanD]);
+
   return (
     <div>
-      {label && (
-        <div className="text-purple-500 font-bold mb-3 text-sm">{label}</div>
-      )}
-      <h2 className="text-2xl font-bold mb-6">{question}</h2>
+      <div className="text-purple-500 font-bold mb-3 text-sm">
+        CHỌN HÌNH ẢNH
+      </div>
+      <h2 className="text-2xl font-bold mb-6">{CauHoi}</h2>
 
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
         {options.map((option) => {
           const isSelected = selectedAnswer === option.value;
           return (
@@ -38,13 +74,10 @@ export default function ImageChoiceQuiz({
                   className="w-full h-32 md:h-40 object-cover"
                 />
               </div>
-              <div className="flex items-center justify-between">
-                <div className="text-lg font-semibold">{option.label}</div>
-                {option.number && (
-                  <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 font-bold">
-                    {option.number}
-                  </div>
-                )}
+              <div className="flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 font-bold">
+                  {option.label}
+                </div>
               </div>
             </button>
           );
@@ -53,4 +86,3 @@ export default function ImageChoiceQuiz({
     </div>
   );
 }
-

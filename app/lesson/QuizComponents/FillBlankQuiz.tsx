@@ -2,29 +2,42 @@
 
 import { FillBlankProps } from '../../types/quiz.types';
 
-export default function FillBlankQuiz({ 
-  question, 
-  placeholder = "Nhập câu trả lời...", 
-  answer, 
-  onAnswerChange 
+export default function FillBlankQuiz({
+  CauHoi,
+  CauMau,
+  ManhGhepA,
+  ManhGhepB,
+  ManhGhepC,
+  ManhGhepD,
+  selectedAnswer,
+  onSelectAnswer
 }: FillBlankProps) {
   return (
     <div>
       <div className="text-purple-500 font-bold mb-3 text-sm">
         ĐIỀN VÀO CHỖ TRỐNG
       </div>
-      <h2 className="text-2xl font-bold mb-8">
-        {question}
-      </h2>
-      
-      <div className="flex justify-center">
-        <input
-          type="text"
-          value={answer}
-          onChange={(e) => onAnswerChange(e.target.value)}
-          placeholder={placeholder}
-          className="w-full max-w-md px-6 py-4 text-xl border-2 border-gray-300 rounded-xl focus:outline-none focus:border-green-500 transition-colors"
-        />
+
+      <h2 className="text-2xl font-bold mb-4">{CauHoi}</h2>
+
+      <p className="text-xl mb-6">{CauMau}</p>
+
+      <div className="grid grid-cols-2 gap-4 max-w-md mx-auto mb-6">
+        {[ManhGhepA, ManhGhepB, ManhGhepC, ManhGhepD].map((item) => (
+          <button
+            key={item}
+            onClick={() => onSelectAnswer(item)}
+            className={`px-4 py-3 border rounded-lg
+              ${selectedAnswer === item
+                 ? 'bg-green-500 text-white border-green-500' 
+                : 'bg-white text-black border-gray-300 hover:border-green-500 hover:bg-green-50'
+              }
+               }
+            `}
+          >
+            {item}
+          </button>
+        ))}
       </div>
     </div>
   );

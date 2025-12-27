@@ -1,16 +1,28 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { CompleteSentenceProps } from '../../types/quiz.types';
 
 export default function CompleteSentenceQuiz({
-  sentence,
-  translation,
-  words,
-  selectedWords,
+  DuongDanAudio,
+  ManhGhepA,
+  ManhGhepB,
+  ManhGhepC,
+  ManhGhepD,
   onSelectWord,
   onRemoveWord,
+  selectedWords = [],
 }: CompleteSentenceProps) {
+  // Tạo mảng words từ các props ManhGhep
+  const words = useMemo(() => {
+    const wordList = [];
+    if (ManhGhepA) wordList.push(ManhGhepA);
+    if (ManhGhepB) wordList.push(ManhGhepB);
+    if (ManhGhepC) wordList.push(ManhGhepC);
+    if (ManhGhepD) wordList.push(ManhGhepD);
+    return wordList;
+  }, [ManhGhepA, ManhGhepB, ManhGhepC, ManhGhepD]);
+
   return (
     <div>
       <div className="text-purple-500 font-bold mb-3 text-sm">
@@ -19,10 +31,17 @@ export default function CompleteSentenceQuiz({
       <h2 className="text-2xl font-bold mb-2">
         Sắp xếp các từ để tạo thành câu hoàn chỉnh
       </h2>
-      <p className="text-gray-600 mb-6">
-        {translation}
-      </p>
-      
+
+      {/* Audio Player (nếu có) */}
+      {DuongDanAudio && (
+        <div className="mb-4">
+          <audio controls className="w-full">
+            <source src={DuongDanAudio} type="audio/mpeg" />
+            Trình duyệt của bạn không hỗ trợ phát audio.
+          </audio>
+        </div>
+      )}
+
       {/* Answer Area */}
       <div className="mb-8 p-6 bg-gray-50 rounded-xl min-h-[80px] flex flex-wrap gap-2 items-center justify-center border-2 border-dashed border-gray-300">
         {selectedWords.length === 0 ? (
