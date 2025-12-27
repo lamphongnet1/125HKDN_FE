@@ -40,7 +40,6 @@ export default function Page() {
         setLoading(true);
         const userID = localStorage.getItem('ID_User');
 
-        // Fetch chương và current lesson song song
         const [chuongRes, currentLessonRes] = await Promise.all([
           fetch("http://127.0.0.1:8000/api/chuong").then(res => res.json()),
           userID 
@@ -54,7 +53,6 @@ export default function Page() {
         if (chuongRes.success) {
           setChuong(chuongRes.data);
           
-          // Fetch tất cả bài học song song
           const baiHocPromises = chuongRes.data.map((ch: Chuong) =>
             fetch(`http://127.0.0.1:8000/api/chuong/${ch.ID_Chuong}/baihoc`)
               .then(res => res.json())
@@ -75,7 +73,6 @@ export default function Page() {
           setBaiHocMap(newBaiHocMap);
         }
 
-        // Set current lesson
         if (currentLessonRes.data) {
           setCurrentLesson(currentLessonRes.data);
         }
@@ -123,7 +120,31 @@ export default function Page() {
 
       <div className="mt-10 relative mx-auto">
         {chuong.map((chuongcon) => {
-          const baiHocList = baiHocMap[chuongcon.ID_Chuong] || [];
+           const baiHocList = baiHocMap[chuongcon.ID_Chuong] || [];
+           const startLessonId = (chuongcon.ThuTu - 1) * 5 + 1;
+
+          if(chuongcon.ID_Chuong === 1){
+            const NODE_CHUONG1 = [
+              { type: 'lesson' as const, status: 'active' as const },
+              { type: 'lesson' as const, status: 'locked' as const },
+              { type: 'lesson' as const, status: 'locked' as const },
+              { type: 'lesson' as const, status: 'locked' as const },
+              { type: 'lesson' as const, status: 'locked' as const },
+            ];
+            return (
+              <LessonPath 
+                key={chuongcon.ID_Chuong}
+                nodes={NODE_CHUONG1}
+                pathId={chuongcon.ThuTu}
+                label={chuongcon.TenChuong}
+                onInView={handleLessonPathInView}
+                color={colors[chuongcon.ThuTu - 1] || colors[0]}
+                baiHocList={baiHocList}
+                currentLesson={currentLesson}
+                startLessonId={startLessonId}
+              />
+            );
+          }
           
           return (
             <LessonPath 
@@ -135,6 +156,7 @@ export default function Page() {
               color={colors[chuongcon.ThuTu - 1] || colors[0]}
               baiHocList={baiHocList}
               currentLesson={currentLesson}
+              startLessonId={startLessonId}
             />
           );
         })}

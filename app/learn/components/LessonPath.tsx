@@ -25,7 +25,6 @@ export type CurrentLesson = {
   ThoiDiemHoc: string;
 };
 
-// Path positions - moved outside component to avoid recreation
 const PATH_POSITIONS: Record<number, { x: number; y: number }[]> = {
   1: [
     { x: 300, y: 40 },
@@ -59,6 +58,7 @@ interface LessonPathProps {
   color: string;
   baiHocList: BaiHoc[];
   currentLesson?: CurrentLesson | null;
+  startLessonId?: number;
 }
 
 export const LessonPath: React.FC<LessonPathProps> = ({
@@ -70,6 +70,7 @@ export const LessonPath: React.FC<LessonPathProps> = ({
   color,
   baiHocList,
   currentLesson = null,
+  startLessonId = 1,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -97,20 +98,16 @@ export const LessonPath: React.FC<LessonPathProps> = ({
     };
   }, [label, pathId, onInView, color]);
 
-  // Update nodes based on current lesson using useMemo
   const updatedNodes = useMemo(() => {
-    // If no current lesson or empty baiHocList, use original nodes
     if (!currentLesson || baiHocList.length === 0) {
       return nodes;
     }
 
-    // Check if current lesson belongs to this chapter
     const chapterId = baiHocList[0]?.ID_Chuong;
     if (!chapterId || currentLesson.ID_Chuong !== chapterId) {
       return nodes;
     }
 
-    // Find the index of current lesson in baiHocList
     const currentLessonIndex = baiHocList.findIndex(
       baiHoc => baiHoc.ID_BaiHoc === currentLesson.ID_BaiHoc
     );
@@ -119,10 +116,8 @@ export const LessonPath: React.FC<LessonPathProps> = ({
       return nodes;
     }
 
-    // Update nodes: mark current lesson as active, previous as completed, later as locked
     return nodes.map((node, index) => {
       if (node.type === 'lesson') {
-        // Find which lesson this node corresponds to
         const lessonIndex = nodes.slice(0, index + 1).filter(n => n.type === 'lesson').length - 1;
         const lessonData = baiHocList[lessonIndex];
         
@@ -134,7 +129,6 @@ export const LessonPath: React.FC<LessonPathProps> = ({
           return { ...node, status: 'locked' as NodeStatus };
         }
       } else {
-        // For chest and trophy nodes, check if all previous lessons are completed
         const previousLessonCount = nodes.slice(0, index).filter(n => n.type === 'lesson').length;
         if (previousLessonCount <= currentLessonIndex) {
           return { ...node, status: 'locked' as NodeStatus };
@@ -162,10 +156,14 @@ export const LessonPath: React.FC<LessonPathProps> = ({
       )}
       <div className="relative w-full h-[450px]">
         {updatedNodes.map((node, index) => {
-          // Tìm bài học tương ứng với node lesson
+          let currentLessonId = startLessonId;
+          if (node.type === 'lesson') {
+            const lessonsBefore = updatedNodes.slice(0, index).filter(n => n.type === 'lesson').length;
+            currentLessonId = startLessonId + lessonsBefore;
+          }
+
           let lessonData = null;
           if (node.type === 'lesson' && baiHocList.length > 0) {
-            // Đếm số lượng lesson nodes trước index này
             const lessonIndex = updatedNodes.slice(0, index + 1).filter(n => n.type === 'lesson').length - 1;
             lessonData = baiHocList[lessonIndex];
           }
@@ -181,6 +179,7 @@ export const LessonPath: React.FC<LessonPathProps> = ({
               lessonTitle={lessonData?.TenBaiHoc || 'Order drinks'}
               lessonNumber={lessonData?.ThuTu || index + 1}
               totalLessons={baiHocList.filter(bh => bh).length || updatedNodes.filter(n => n.type === 'lesson').length}
+              lessonId={node.type === 'lesson' ? currentLessonId : undefined}
             />
           );
         })}
