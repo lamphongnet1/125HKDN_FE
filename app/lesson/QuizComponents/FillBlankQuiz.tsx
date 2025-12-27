@@ -9,8 +9,7 @@ export default function FillBlankQuiz({
   ManhGhepB,
   ManhGhepC,
   ManhGhepD,
-  selectedAnswer,
-  onSelectAnswer
+  onAnswerChange
 }: FillBlankProps) {
   return (
     <div>
@@ -26,14 +25,8 @@ export default function FillBlankQuiz({
         {[ManhGhepA, ManhGhepB, ManhGhepC, ManhGhepD].map((item) => (
           <button
             key={item}
-            onClick={() => onSelectAnswer(item)}
-            className={`px-4 py-3 border rounded-lg
-              ${selectedAnswer === item
-                 ? 'bg-green-500 text-white border-green-500' 
-                : 'bg-white text-black border-gray-300 hover:border-green-500 hover:bg-green-50'
-              }
-               }
-            `}
+            onClick={() => onAnswerChange(item)}
+            className="px-4 py-3 border rounded-lg hover:bg-green-100"
           >
             {item}
           </button>
