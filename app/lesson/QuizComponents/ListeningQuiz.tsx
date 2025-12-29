@@ -12,6 +12,7 @@ export default function ListeningQuiz({
   selectedAnswer,
   onSelectAnswer,
 }: ListeningQuizProps) {
+  console.log('Audio URL:', DuongDanAudio);
   const handlePlayAudio = () => {
     if (DuongDanAudio) {
       const audio = new Audio(DuongDanAudio);
