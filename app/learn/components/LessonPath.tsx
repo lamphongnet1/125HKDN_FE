@@ -104,38 +104,52 @@ export const LessonPath: React.FC<LessonPathProps> = ({
     }
 
     const chapterId = baiHocList[0]?.ID_Chuong;
-    if (!chapterId || currentLesson.ID_Chuong !== chapterId) {
+    if (!chapterId) {
       return nodes;
     }
 
-    const currentLessonIndex = baiHocList.findIndex(
-      baiHoc => baiHoc.ID_BaiHoc === currentLesson.ID_BaiHoc
-    );
+    // Nếu đây là chương hiện tại
+    if (currentLesson.ID_Chuong === chapterId) {
+      const currentLessonIndex = baiHocList.findIndex(
+        baiHoc => baiHoc.ID_BaiHoc === currentLesson.ID_BaiHoc
+      );
 
-    if (currentLessonIndex === -1) {
-      return nodes;
-    }
-
-    return nodes.map((node, index) => {
-      if (node.type === 'lesson') {
-        const lessonIndex = nodes.slice(0, index + 1).filter(n => n.type === 'lesson').length - 1;
-        const lessonData = baiHocList[lessonIndex];
-        
-        if (lessonData && lessonData.ID_BaiHoc === currentLesson.ID_BaiHoc) {
-          return { ...node, status: 'active' as NodeStatus };
-        } else if (lessonIndex < currentLessonIndex) {
-          return { ...node, status: 'completed' as NodeStatus };
-        } else {
-          return { ...node, status: 'locked' as NodeStatus };
-        }
-      } else {
-        const previousLessonCount = nodes.slice(0, index).filter(n => n.type === 'lesson').length;
-        if (previousLessonCount <= currentLessonIndex) {
-          return { ...node, status: 'locked' as NodeStatus };
-        }
-        return node;
+      if (currentLessonIndex === -1) {
+        return nodes;
       }
-    });
+
+      return nodes.map((node, index) => {
+        if (node.type === 'lesson') {
+          const lessonIndex = nodes.slice(0, index + 1).filter(n => n.type === 'lesson').length - 1;
+          const lessonData = baiHocList[lessonIndex];
+          
+          if (lessonData && lessonData.ID_BaiHoc === currentLesson.ID_BaiHoc) {
+            return { ...node, status: 'active' as NodeStatus };
+          } else if (lessonIndex < currentLessonIndex) {
+            return { ...node, status: 'completed' as NodeStatus };
+          } else {
+            return { ...node, status: 'locked' as NodeStatus };
+          }
+        } else {
+          const previousLessonCount = nodes.slice(0, index).filter(n => n.type === 'lesson').length;
+          if (previousLessonCount <= currentLessonIndex) {
+            return { ...node, status: 'locked' as NodeStatus };
+          }
+          return node;
+        }
+      });
+    } 
+    // Nếu đây là chương trước chương hiện tại - đánh dấu tất cả là completed
+    else if (chapterId < currentLesson.ID_Chuong) {
+      return nodes.map((node) => ({
+        ...node,
+        status: 'completed' as NodeStatus
+      }));
+    } 
+    // Nếu đây là chương sau chương hiện tại - giữ nguyên locked
+    else {
+      return nodes;
+    }
   }, [currentLesson, baiHocList, nodes]);
 
   const positions = PATH_POSITIONS[pathId] || PATH_POSITIONS[1];
