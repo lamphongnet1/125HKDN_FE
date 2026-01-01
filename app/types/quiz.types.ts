@@ -1,3 +1,23 @@
+export type Chuong = {
+  ID_Chuong: number;
+  TenChuong: string;
+  ThuTu: number;
+};
+
+export type BaiHoc = {
+  ID_BaiHoc: number;
+  ID_Chuong: number;
+  TenBaiHoc: string;
+  IconBaiHoc: string;
+  ThuTu: number;
+};
+
+export type LearnContextType = {
+  chuong: Chuong[] | null;
+  baiHocMap: Record<number, BaiHoc[]>;
+  loading: boolean;
+};
+
 export interface QuizQuestion {
   ID_Cau: number;
   ThuTu: number;
