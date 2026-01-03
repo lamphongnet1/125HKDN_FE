@@ -60,7 +60,7 @@ export default function UserManagementPage() {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 px-8 py-12 font-sans text-gray-800">
+        <div className="px-8 py-12 font-sans text-gray-800">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">

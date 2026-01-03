@@ -27,7 +27,8 @@ export const adminUserService = {
                 throw new Error(`Error fetching users: ${response.statusText}`);
             }
 
-            return await response.json();
+            const result = await response.json();
+            return result.data || result;
         } catch (error) {
             console.error('Failed to fetch users:', error);
             throw error;
