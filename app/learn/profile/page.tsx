@@ -7,6 +7,7 @@ type User = {
   Diem: number;
   SoGioOnline: number;
   created_at: string;
+  ID_BaiHoc: number;
 };
 
 export default function Profile() {
@@ -24,6 +25,18 @@ export default function Profile() {
       })
       .catch(err => console.error(err));
   }, []);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/user/tiendo/" + userID)
+      .then(res => res.json())
+      .then(res => {
+        if (res.success && res.data && res.data.length > 0) {
+          // Extract ID_BaiHoc from first element of array
+          setUser(prev => prev ? { ...prev, ID_BaiHoc: res.data[0].ID_BaiHoc } : prev);
+        }
+      })
+      .catch(err => console.error(err));
+  }, [userID]);
 
   useEffect(() => {
     fetch("http://localhost:8000/api/users/top-score")
@@ -92,8 +105,8 @@ export default function Profile() {
         <div className="grid grid-cols-2 gap-4 p-6">
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
             <div className="text-3xl mb-2">🎯</div>
-            <div className="text-3xl font-extrabold">Chương đã học tới</div>
-            <div className="text-sm text-gray-600 mt-1">0</div>
+            <div className="text-3xl font-extrabold">Bài học đã học tới</div>
+            <div className="text-sm text-gray-600 mt-1">Bài {user.ID_BaiHoc}</div>
           </div>
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
             <div className="text-3xl mb-2">💪</div>
