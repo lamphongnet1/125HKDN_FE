@@ -243,8 +243,8 @@ export default function CauHoiManagementPage() {
                                         key={page}
                                         onClick={() => setCurrentPage(page)}
                                         className={`px-4 py-2 rounded-lg text-sm font-medium transition ${currentPage === page
-                                                ? 'bg-blue-600 text-white'
-                                                : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
                                             }`}
                                     >
                                         {page}
@@ -283,7 +283,7 @@ export default function CauHoiManagementPage() {
                                 >
                                     {baiHocs.map(baiHoc => (
                                         <option key={baiHoc.ID_BaiHoc} value={baiHoc.ID_BaiHoc}>
-                                            {baiHoc.TenBaiHoc}
+                                            Chương: {baiHoc.ID_Chuong} - Bài: {baiHoc.ID_BaiHoc} - {baiHoc.TenBaiHoc}
                                         </option>
                                     ))}
                                 </select>
