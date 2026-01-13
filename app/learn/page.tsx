@@ -6,7 +6,7 @@ import { Modal } from './components/Modal';
 import { Header } from './components/Header';
 import { useLearn } from '@/contexts/learncontext';  // ✅ Đã import
 import { LearnPageSkeleton } from './components/SkeletonLoader'; 
-
+import { useOnlineTimeTracker } from './components/useOnlineTimeTracker';
 const DEFAULT_NODES = [
   { type: 'lesson' as const, status: 'locked' as const },
   { type: 'lesson' as const, status: 'locked' as const },
@@ -16,6 +16,7 @@ const DEFAULT_NODES = [
 ];
 
 export default function Page() {
+  useOnlineTimeTracker();
   // ✅ LẤY DATA TỪ CONTEXT (không cần state nữa!)
   const { chuong, baiHocMap, loading: contextLoading } = useLearn();
   

@@ -1,4 +1,4 @@
-import type { RegisterPayload, LoginPayload } from '../types/user';
+import type { RegisterPayload, LoginPayload, UpdateOnlineTimeResponse } from '../types/user';
 
 /**
  * Helper to handle HTTP responses.
@@ -67,3 +67,23 @@ export const loginUser = async (email: string, password: string) => {
     });
     return handleResponse(res);
 };
+
+export const updateOnlineTime = async (
+    userId: string | number, 
+    hours: number
+  ): Promise<UpdateOnlineTimeResponse> => {
+    const response = await fetch(
+      `http://localhost:8000/api/users/${userId}/online-time`, 
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ SoGioOnline: hours }),
+      }
+    );
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    return response.json();
+  };

@@ -50,10 +50,8 @@ export default function Auth() {
       };
 
       const json = await registerUser(payload as any);
-      // API đăng ký thành công sẽ trả về user object
       if (json && (json.user || json.message === 'User created successfully' || json.success)) {
         setSignupMessage('Đăng ký thành công!');
-        // Refresh lại trang sau 1.5 giây
         setTimeout(() => {
           window.location.reload();
         }, 1500);
@@ -68,7 +66,6 @@ export default function Auth() {
   };
 
   const fillAndRegisterDemo = async () => {
-    // The user-provided demo data
     const demo = {
       HoTen: 'Nguyễn Bảo',
       Email: 'vanbao@example.com',
@@ -77,7 +74,6 @@ export default function Auth() {
       SoGioOnline: 5,
     };
 
-    // prefill fields
     setAge(20);
     setShowDetails(true);
     setSignupName(demo.HoTen);
@@ -86,11 +82,9 @@ export default function Auth() {
     setSignupDiem(demo.Diem);
     setSignupSoGioOnline(demo.SoGioOnline);
 
-    // try register and then login (if not already logged in)
     setSignupLoading(true);
     try {
       await handleRegister();
-      // attempt login with same credentials
       setLoginId(demo.Email);
       setLoginPassword(demo.MatKhau);
       await new Promise((r) => setTimeout(r, 300));
@@ -110,15 +104,16 @@ export default function Auth() {
     setLoginLoading(true);
     try {
       const json = await loginUser(loginId.trim(), loginPassword);
-      // API chỉ trả về { user: {...} }, không có token
       if (json && json.user) {
-        // Lưu toàn bộ user object
+        // Lưu thông tin user
         localStorage.setItem('user', JSON.stringify(json.user));
-        // Lưu ID_User riêng để dễ truy cập
-        if (json.user.ID_User !== undefined && json.user.ID_User !== null) {
-          localStorage.setItem('ID_User', String(json.user.ID_User));
-        }
+        localStorage.setItem('ID_User', String(json.user.ID_User));
+        
+        // Lưu thời gian bắt đầu online (timestamp tính bằng milliseconds)
+        localStorage.setItem('loginTime', String(Date.now()));
+        
         setLoginMessage('Đăng nhập thành công');
+        
         // Chuyển về trang /learn
         setTimeout(() => router.push('/learn'), 700);
       } else {
@@ -240,7 +235,6 @@ export default function Auth() {
         )}
       </div>
 
-      {/* CSS GLOBAL: Cần thiết để body có đủ chiều cao cho việc căn giữa */}
       <style jsx global>{`
         html, body {
           margin: 0;
@@ -347,7 +341,7 @@ export default function Auth() {
           cursor: pointer;
           margin-top: 10px;
           box-shadow: 0 8px 22px rgba(64,123,0,0.12);
-transition: transform 120ms, box-shadow 120ms;
+          transition: transform 120ms, box-shadow 120ms;
         }
         .nút_xanh:hover { transform: translateY(-2px); }
         .nút_xám { background: #f3f4f6 !important; color: #6b7280 !important; pointer-events: none; }

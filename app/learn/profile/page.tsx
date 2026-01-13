@@ -123,7 +123,21 @@ export default function Profile() {
           <div className="bg-gray-50 p-5 rounded-2xl text-center">
             <div className="text-3xl mb-2">🕒</div>
             <div className="text-3xl font-extrabold text-gray-500">Số giờ online</div>
-            <div className="text-sm text-gray-600 mt-1">{user.SoGioOnline}</div>
+            <div className="text-sm text-gray-600 mt-1">
+              {(() => {
+                const totalSeconds = user.SoGioOnline;
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                
+                if (hours > 0) {
+                  return `${hours} giờ ${minutes} phút`;
+                } else if (minutes > 0) {
+                  return `${minutes} phút ${seconds} giây`;
+                }
+                return `${seconds} giây`;
+              })()}
+            </div>
           </div>
         </div>
 

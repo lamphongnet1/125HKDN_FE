@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Icon } from '@iconify/react';
 import Image from "next/image";
+import { updateOnlineTime } from "@/app/login/services/userService";
 
 interface NavItemProps {
   icon: React.ReactNode;
@@ -81,13 +82,25 @@ const NavItem: React.FC<NavItemProps> = ({ icon, label, href, active, showPopup 
                 <span className="font-bold text-gray-700 text-sm tracking-wide">TRỢ GIÚP</span>
               </button>
 
-              <button className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors"
-                onClick={() => {
-                  // Xóa tất cả dữ liệu trong localStorage
-                  localStorage.removeItem('user');
-                  localStorage.removeItem('ID_User');
-                  localStorage.removeItem('token');
-                  // Chuyển về trang login
+              <button 
+                className="w-full text-left px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors"
+                onClick={async () => {
+                  const userId = localStorage.getItem('ID_User');
+                  const loginTime = localStorage.getItem('loginTime');
+                  
+                  if (userId && loginTime) {
+                    const hours = (Date.now() - parseInt(loginTime)) / (1000 * 60 * 60);
+                    if (hours > 0) {
+                      try {
+                        await updateOnlineTime(userId, hours);
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    }
+                  }
+                  
+                  localStorage.clear();
+                  
                   router.push('/login');
                 }}
               >

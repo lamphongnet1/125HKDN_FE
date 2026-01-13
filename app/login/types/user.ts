@@ -11,3 +11,9 @@ export interface LoginPayload {
     Email: string;
     MatKhau: string;
 }
+
+export interface UpdateOnlineTimeResponse {
+    success: boolean;
+    message: string;
+    SoGioOnline: number;
+  }
